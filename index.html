@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>改造智能助手 · 预设版v1.2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   shadcn/ui 风格设计系统 — 改造智能助手
+   ─ 清晰层级 · 精确间距 · 中性色调 · 微动效
+   ═══════════════════════════════════════════════ */
+
+/* ── Google Fonts: Noto Sans SC ── */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+
+:root {
+  /* shadcn light (极简) */
+  --bg:       #f8fafc;
+  --bg2:      #f1f5f9;
+  --card:     #ffffff;
+  --card2:    #f8fafc;
+  --border:   #e2e8f0;
+  --border2:  #cbd5e1;
+  --accent:   #2563eb;
+  --accent2:  #1d4ed8;
+  --accent-fg:#ffffff;
+  --muted:    #f1f5f9;
+  --muted-fg: #64748b;
+  --text:     #0f172a;
+  --text2:    #64748b;
+  --text3:    #334155;
+  --red:      #ef4444;
+  --green:    #22c55e;
+  --blue:     #3b82f6;
+  --purple:   #8b5cf6;
+  --gold:     #f59e0b;
+  --r:   6px;
+  --r2:  4px;
+  --r3:  8px;
+  --colA:#2563eb; --colB:#f43f5e;
+  --inp:#ffffff;  --inp-bd:#e2e8f0;
+  --rgb-a:37,99,235; --rgb-b:244,63,94;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow:    0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+  --score-below:#ef4444; --score-pass:#22c55e; --score-good:#3b82f6;
+  --score-great:#8b5cf6; --score-max:#f59e0b;
+  --warn-brown:#92400e; --warn-brown2:#78350f; --cmp-border:#d97706;
+  --cmp-atk:#b45309; --cmp-def:#1e40af; --cmp-sum:#1e3a5f;
+  --s134-bg1:#f0f9ff; --s134-bg2:#e0f2fe; --s134-border:#bae6fd;
+  --s134-title:#0369a1; --s134-val:#0c4a6e;
+}
+
+/* ── 护眼·复古米黄 ── */
+[data-skin="retro"] {
+  --bg:#f5f0e8; --bg2:#ede7d9; --card:#fdf9f0; --card2:#f5ede0; --border:#d6c9b0; --border2:#c5b49a;
+  --accent:#7c6a4f; --accent2:#6b5a42; --accent-fg:#fdf9f0;
+  --muted:#f0e8d8; --muted-fg:#7a6a54;
+  --text:#2d2215; --text2:#7a6a54; --text3:#4a3828;
+  --red:#a0522d; --green:#5a7a4a; --blue:#4a6a8a; --purple:#7a5a8a; --gold:#a07a30;
+  --r:6px; --r2:4px; --r3:8px;
+  --colA:#4a6a8a; --colB:#8a4a6a;
+  --inp:#fdf9f0; --inp-bd:#d6c9b0; --rgb-a:74,106,138; --rgb-b:138,74,106;
+  --shadow-sm:0 1px 2px rgba(100,80,40,.08);
+  --shadow:0 1px 3px rgba(100,80,40,.12),0 1px 2px rgba(100,80,40,.08);
+  --shadow-md:0 4px 6px rgba(100,80,40,.1),0 2px 4px rgba(100,80,40,.08);
+  --score-below:#a0522d; --score-pass:#5a7a4a; --score-good:#4a6a8a; --score-great:#7a5a8a; --score-max:#a07a30;
+  --warn-brown:#7a5a30; --warn-brown2:#5a3a20; --cmp-border:#c8a87a;
+  --cmp-atk:#6a3a20; --cmp-def:#2a3a60; --cmp-sum:#2a4a5a;
+  --s134-bg1:#f2ead8; --s134-bg2:#e8dfc8; --s134-border:#c8b090; --s134-title:#4a3828; --s134-val:#2a4a6a;
+}
+
+/* ── 赛博电竞·霓虹暗黑 ── */
+[data-skin="esport"] {
+  --bg:#06080F; --bg2:#020408; --card:#0D1117; --card2:#161C28; --border:#0E2A48; --border2:#1A3A5C;
+  --accent:#00D4FF; --accent2:#0099CC; --accent-fg:#000000;
+  --muted:#0A1525; --muted-fg:#5A8AAA;
+  --text:#E8F4FF; --text2:#7BA5C8; --text3:#A8C8E8;
+  --red:#FF2D78; --green:#00FF9F; --blue:#00D4FF; --purple:#BF00FF; --gold:#FFD700;
+  --r:6px; --r2:4px; --r3:8px;
+  --colA:#00D4FF; --colB:#FF2D78;
+  --inp:#0A1020; --inp-bd:#0E2A48; --rgb-a:0,212,255; --rgb-b:255,45,120;
+  --shadow-sm:0 0 8px rgba(0,212,255,.15),0 1px 2px rgba(0,0,0,.6);
+  --shadow:0 0 12px rgba(0,212,255,.2),0 2px 4px rgba(0,0,0,.6);
+  --shadow-md:0 0 20px rgba(0,212,255,.25),0 4px 8px rgba(0,0,0,.7);
+  --shadow-lg:0 0 40px rgba(0,212,255,.2),0 8px 24px rgba(0,0,0,.8);
+  --score-below:#FF2D78; --score-pass:#00FF9F; --score-good:#00D4FF; --score-great:#BF00FF; --score-max:#FFD700;
+  --warn-brown:#FFD700; --warn-brown2:#FFA500; --cmp-border:#1A3A5C;
+  --cmp-atk:#FF6A9F; --cmp-def:#00AADD; --cmp-sum:#00D4FF;
+  --s134-bg1:#080E1C; --s134-bg2:#060A14; --s134-border:#0E2A48; --s134-title:#A8C8E8; --s134-val:#00D4FF;
+}
+
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg2);
+  min-height:100vh;padding:8px;font-size:14px;
+  color:var(--text);
+  transition:background .25s,color .25s;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Wrap / Shell ── */
+.wrap{
+  max-width:1600px;margin:0 auto;
+  background:var(--card);
+  border-radius:12px;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:background .25s,border-color .25s;
+}
+
+/* ═══ HEADER ═══ */
+header{
+  background:var(--card);color:var(--text);
+  padding:12px 18px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--border);
+  transition:background .25s;
+}
+h1{font-size:clamp(.95rem,2.5vw,1.35rem);font-weight:700;letter-spacing:-.02em;margin-bottom:2px}
+.subtitle{font-size:clamp(.6rem,1.6vw,.75rem);color:var(--text2);font-weight:400}
+.hd-title-block{flex:1;text-align:center}
+.hd-right-block{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.hd-row2{display:flex;align-items:center;gap:6px}
+.mob-skin-label{display:none}
+
+/* shadcn outline button */
+.tut-btn{
+  height:32px;padding:0 12px;
+  border:1px solid var(--border);border-radius:var(--r);
+  background:transparent;color:var(--text3);
+  font-size:.78rem;font-weight:500;white-space:nowrap;
+  cursor:pointer;transition:background .15s,border-color .15s,color .15s;
+  text-decoration:none;display:inline-flex;align-items:center;
+  font-family:inherit;
+}
+.tut-btn:hover{background:var(--muted);border-color:var(--border2);color:var(--text)}
+
+/* skin toggle group — shadcn ToggleGroup style */
+.sk-btn{
+  display:flex;align-items:center;gap:4px;
+  height:28px;padding:0 10px;
+  border-radius:var(--r);border:1px solid var(--border);
+  background:transparent;color:var(--text2);
+  font-size:.72rem;font-weight:500;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  font-family:inherit;
+}
+.sk-btn.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.sk-btn:hover:not(.active){background:var(--muted);color:var(--text)}
+.sk-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
+#skinBtns{display:flex;gap:4px;background:var(--muted);border:1px solid var(--border);border-radius:var(--r);padding:3px}
+#skinBtns .sk-btn{border:none;background:transparent}
+#skinBtns .sk-btn.active{background:var(--card);box-shadow:var(--shadow-sm);color:var(--text);border:1px solid var(--border2)}
+
+/* view-toggle */
+.view-toggle{display:flex;background:var(--muted);border:1px solid var(--border);border-radius:var(--r);padding:3px;gap:2px}
+.vt-btn{
+  flex:1;padding:5px 10px;border:none;background:transparent;
+  color:var(--text2);cursor:pointer;font-size:.78rem;font-weight:500;
+  border-radius:calc(var(--r) - 2px);transition:all .15s;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;
+}
+.vt-btn.active{background:var(--card);color:var(--text);box-shadow:var(--shadow-sm)}
+.vt-btn:hover:not(.active){color:var(--text)}
+
+/* ═══ MOBILE TAB BAR ═══ */
+.mob-tab-bar{display:none}
+@media(max-width:899px){
+  .wrap{padding-bottom:60px}
+  .mob-tab-bar{
+    display:flex;position:fixed;bottom:0;left:0;width:100%;z-index:1000;
+    background:var(--card);
+    padding:6px 10px;
+    padding-bottom:calc(6px + env(safe-area-inset-bottom));
+    gap:6px;border-top:1px solid var(--border);
+    box-shadow:0 -2px 16px rgba(0,0,0,.1);
+  }
+  .mob-tab{
+    flex:1;padding:15px 4px;min-height:58px;border:none;border-radius:10px;
+    background:transparent;color:var(--text2);
+    font-weight:600;font-size:.8rem;cursor:pointer;
+    transition:background .2s,color .2s,transform .15s;font-family:inherit;
+    position:relative;
+  }
+  .mob-tab.active{
+    background:var(--accent);color:var(--accent-fg);
+    box-shadow:0 2px 10px rgba(var(--rgb-a),.35);
+    transform:translateY(-2px);
+  }
+  .mob-tab:not(.active):hover{background:var(--muted)}
+  .mob-hide{display:none!important}
+  header{flex-direction:column;align-items:stretch;padding:10px 12px;gap:0}
+  .hd-title-block{text-align:center;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px}
+  .hd-right-block{align-items:stretch;gap:5px}
+  .hd-row2{justify-content:space-between;flex-wrap:wrap;gap:4px}
+  .mob-skin-label{display:inline;font-size:.72rem;font-weight:500;white-space:nowrap;color:var(--text2)}
+  #skinBtns{flex-wrap:wrap}
+  .hd-tut-group{display:flex;gap:4px;flex-shrink:0}
+  .view-toggle{display:flex!important;width:100%}
+  .vt-btn{flex:1}
+  /* 列间隔底部边距优化 */
+  .dual-col-a,.dual-col-b{border-right:none;border-bottom:1px solid var(--border);padding:12px 12px 16px}
+  .dual-col-fn{padding:12px 12px 16px}
+}
+
+/* ═══ THREE-COLUMN LAYOUT ═══ */
+.dual-main{display:flex;flex-direction:column}
+@media(min-width:900px){
+  .dual-main{flex-direction:row}
+}
+.dual-col-a{
+  flex:2.5;padding:14px 14px 20px;border-right:1px solid var(--border);min-width:0;
+  --col:var(--colA);--cdk:#1d4ed8;--rgb:37,99,235;
+}
+.dual-col-b{
+  flex:2.5;padding:14px 14px 20px;border-right:1px solid var(--border);min-width:0;
+  --col:var(--colB);--cdk:#be123c;--rgb:244,63,94;
+}
+.dual-col-fn{flex:3;padding:14px 14px 20px;background:var(--bg2);min-width:0}
+
+/* ═══ MODEL HEADER ═══ */
+.model-header{
+  font-weight:700;font-size:.92rem;
+  padding:10px 14px;border-radius:var(--r3);
+  color:var(--col);margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:rgba(var(--rgb),.07);
+  border:1.5px solid rgba(var(--rgb),.25);
+  box-shadow:0 2px 8px rgba(var(--rgb),.08);
+}
+.model-header::before{
+  content:'';display:block;width:3px;height:16px;
+  background:var(--col);border-radius:9999px;flex-shrink:0;
+}
+
+/* ═══ COLLAPSIBLE SECTIONS ═══ */
+.col-sec{margin-bottom:10px}
+.col-hd{
+  color:var(--text3);padding:9px 14px;border-radius:var(--r);
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  font-weight:600;font-size:.82rem;margin-bottom:5px;user-select:none;
+  background:var(--muted);border:1px solid var(--border);
+  transition:background .15s,border-color .15s,transform .1s;
+  position:relative;overflow:hidden;
+}
+.col-hd::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(var(--rgb),.0);
+  transition:background .15s;pointer-events:none;
+}
+.col-hd:hover{background:var(--card);border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.col-hd:hover::after{background:rgba(var(--rgb),.04)}
+.col-hd::before{content:"▼ ";font-size:.65em;margin-right:4px;color:rgba(var(--rgb),.7);transition:transform .2s;display:inline-block}
+.col-hd.collapsed::before{transform:rotate(-90deg)}
+.col-body.hidden{display:none}
+
+/* ═══ CARDS & FORM ═══ */
+.card{
+  background:var(--card);border-radius:var(--r3);
+  padding:14px;margin-bottom:10px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .2s;
+}
+.card:last-child{margin-bottom:0}
+.sub{
+  font-size:.75rem;font-weight:600;color:var(--text2);
+  margin:10px 0 6px;display:flex;align-items:center;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.sub::before{content:"";width:3px;height:11px;background:var(--accent);border-radius:2px;margin-right:6px;flex-shrink:0}
+.row{display:flex;align-items:center;margin-bottom:5px;gap:6px}
+.lbl{font-size:.78rem;font-weight:500;color:var(--text2);min-width:90px;flex-shrink:0;line-height:1.4}
+
+/* shadcn input / select */
+select,input[type=number],input[type=text]{
+  height:32px;padding:0 8px;
+  border:1px solid var(--inp-bd);border-radius:var(--r);
+  font-size:.8rem;background:var(--inp);color:var(--text);
+  font-family:inherit;
+  transition:border-color .15s,box-shadow .15s,background .25s,color .25s;
+  outline:none;
+}
+select{width:auto;max-width:100%;cursor:pointer}
+input[type=number]{width:72px;text-align:center}
+input[type=text]{width:100%;max-width:160px}
+select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--rgb-a),.12)}
+select:disabled,input:disabled{opacity:.45;cursor:not-allowed;background:var(--muted)}
+
+/* checkbox — shadcn style */
+.cb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:3px}
+.cb-item{display:flex;align-items:center;font-size:.78rem;padding:4px 0;gap:6px;cursor:pointer}
+.cb-item input[type=checkbox]{
+  width:15px;height:15px;flex-shrink:0;
+  accent-color:var(--accent);cursor:pointer;
+  border-radius:3px;
+}
+.hint{font-size:.7rem;color:var(--text2);white-space:nowrap}
+.note{font-size:.7rem;color:var(--text2);margin-top:4px}
+
+/* ═══ FLASH ANIMATION ═══ */
+@keyframes flashUpdate{
+  0%{background:var(--accent);color:var(--accent-fg);border-radius:3px;padding:0 3px}
+  100%{background:transparent;color:inherit;padding:0 3px}
+}
+.val-updated{animation:flashUpdate .35s ease-out}
+
+/* ═══ COEFF CARDS ═══ */
+.dual-coeff-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:nowrap}
+.dual-coeff-card{
+  flex:1;min-width:0;text-align:center;
+  padding:16px 12px;border-radius:var(--r3);
+  font-weight:600;font-size:.82rem;
+  border:1.5px solid;
+  box-shadow:var(--shadow-sm);
+  transition:transform .2s,box-shadow .2s;
+}
+.dual-coeff-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.coeff-ab{background:rgba(var(--rgb-a),.06);border-color:rgba(var(--rgb-a),.3);color:var(--colA)}
+.coeff-ba{background:rgba(var(--rgb-b),.06);border-color:rgba(var(--rgb-b),.3);color:var(--colB)}
+.dual-coeff-card .big-num{
+  font-size:2rem;display:block;margin-top:8px;
+  font-weight:800;letter-spacing:-.04em;
+}
+@media(max-width:480px){
+  .dual-coeff-card .big-num{font-size:1.6rem}
+  .dual-coeff-card{padding:12px 8px}
+}
+
+/* ═══ SCORE CARDS ═══ */
+.s134-coeff-card{
+  flex:1;min-width:90px;text-align:center;
+  padding:8px 5px;border-radius:var(--r);
+  font-size:.72rem;font-weight:600;border:1px solid;
+}
+.s134-score-row{
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  flex-wrap:wrap;margin:6px 0 3px;padding:7px 10px;
+  background:var(--card);border-radius:var(--r);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);font-size:.74rem;
+}
+.s134-score-label{font-weight:600;color:var(--text3);min-width:52px;flex-shrink:0}
+/* badges — shadcn badge variants */
+.s134-score-badge{
+  display:inline-flex;align-items:center;
+  padding:2px 8px;border-radius:9999px;
+  font-weight:600;font-size:.7rem;white-space:nowrap;
+  border:1px solid transparent;
+  transition:all .15s;
+}
+.s134-score-pass{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.s134-score-good{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}
+.s134-score-great{background:#ede9fe;color:#6d28d9;border-color:#ddd6fe}
+.s134-score-max{background:#fef3c7;color:#b45309;border-color:#fde68a}
+.s134-score-below{background:#fee2e2;color:#b91c1c;border-color:#fecaca}
+.s134-score-na{background:var(--muted);color:var(--muted-fg);border-color:var(--border)}
+.s134-score-next{color:var(--text2);font-size:.68rem;flex:1;text-align:right;white-space:nowrap}
+/* progress bar */
+.score-bar-wrap{height:4px;background:var(--border);border-radius:9999px;margin:3px 0 5px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:9999px;transition:width .4s ease,background .4s ease;width:0}
+
+/* ═══ BUTTONS ═══ */
+/* primary */
+.btns{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{
+  height:36px;padding:0 14px;
+  border:none;border-radius:var(--r);
+  cursor:pointer;font-size:.8rem;font-weight:500;
+  color:var(--accent-fg);
+  flex:1;max-width:150px;min-width:80px;
+  transition:opacity .15s,transform .1s,box-shadow .15s;
+  font-family:inherit;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.btn:hover{opacity:.9;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn:active{transform:translateY(0);box-shadow:none;opacity:1}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-p{background:var(--accent)}
+.btn-w{background:var(--gold)}
+.btn-d{background:var(--red)}
+.btn-c{background:var(--purple)}
+
+/* inline/ghost */
+.inline-btn{
+  height:28px;padding:0 10px;
+  border:none;border-radius:var(--r);
+  cursor:pointer;font-size:.72rem;font-weight:500;
+  color:var(--accent-fg);white-space:nowrap;
+  transition:opacity .15s,transform .1s;
+  font-family:inherit;
+  display:inline-flex;align-items:center;
+}
+.inline-btn:hover{opacity:.85;transform:translateY(-1px)}
+.inline-btn:active{transform:translateY(0);opacity:1}
+.inline-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* icon / outline */
+.icon-btn{
+  height:28px;padding:0 10px;
+  border:1px solid var(--border);border-radius:var(--r);
+  background:var(--card);color:var(--text3);
+  font-size:.72rem;cursor:pointer;font-weight:500;
+  white-space:nowrap;font-family:inherit;
+  transition:background .15s,border-color .15s,color .15s;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.icon-btn:hover{background:var(--muted);border-color:var(--border2);color:var(--text)}
+
+/* ═══ COMPARE SECTION ═══ */
+.cmp-sec{
+  background:var(--card);border-radius:var(--r3);
+  padding:14px;margin:10px 0;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);display:none;
+}
+.sec-title{
+  font-size:.85rem;font-weight:600;color:var(--text3);
+  margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.sec-title::before{content:"";width:3px;height:14px;background:var(--accent);border-radius:2px}
+
+/* ═══ TABS ═══ */
+.tabs{
+  display:flex;margin-bottom:0;gap:0;
+  background:var(--muted);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;padding:3px;gap:2px;
+  margin-bottom:8px;
+}
+.tab-btn{
+  flex:1;padding:6px 10px;border:none;
+  background:transparent;border-radius:calc(var(--r) - 2px);
+  cursor:pointer;font-weight:500;color:var(--text2);
+  font-size:.76rem;transition:all .15s;font-family:inherit;
+}
+.tab-btn.active{background:var(--card);color:var(--text);box-shadow:var(--shadow-sm)}
+.tab-body{display:none;padding:10px;background:var(--card);border-radius:var(--r);border:1px solid var(--border);font-size:.78rem;margin-top:4px}
+.tab-body.active{display:block}
+.tab-body ul{padding-left:14px}
+.tab-body li{margin-bottom:4px;line-height:1.5}
+
+/* ═══ HISTORY TABLE ═══ */
+.dual-hist-table,.hist-table{
+  width:100%;border-collapse:collapse;table-layout:auto;
+}
+.dual-hist-table th,.dual-hist-table td,
+.hist-table th,.hist-table td{
+  padding:7px 6px;text-align:center;
+  border-bottom:1px solid var(--border);
+  font-size:.72rem;white-space:nowrap;
+}
+.dual-hist-table th,.hist-table th{
+  background:var(--muted);color:var(--text2);
+  font-weight:600;font-size:.7rem;
+  text-transform:uppercase;letter-spacing:.04em;
+  border-bottom:1px solid var(--border2);
+}
+.dual-hist-table tr:hover td{background:var(--bg2)}
+.dual-hist-table tr:nth-child(even) td{background:rgba(0,0,0,.015)}
+.del-btn{
+  border:1px solid var(--border);padding:3px 8px;border-radius:var(--r2);
+  cursor:pointer;font-size:.68rem;font-weight:500;
+  background:transparent;color:var(--red);
+  transition:background .15s,color .15s;font-family:inherit;
+}
+.del-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.load-btn{
+  border:1px solid var(--border);padding:3px 8px;border-radius:var(--r2);
+  cursor:pointer;font-size:.68rem;font-weight:500;
+  background:transparent;color:var(--blue);
+  transition:background .15s,color .15s;font-family:inherit;
+}
+.load-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* ═══ REC / BEST PANELS ═══ */
+.dual-rec{
+  background:var(--card);padding:12px;border-radius:var(--r3);
+  margin:10px 0;border-left:3px solid var(--gold);
+  border:1px solid var(--border);border-left:3px solid var(--gold);
+  box-shadow:var(--shadow-sm);display:none;
+}
+.dual-rec .tabs{display:flex;gap:2px;margin-bottom:10px}
+.close-rec{
+  float:right;border:1px solid var(--border);color:var(--text2);
+  background:transparent;border-radius:var(--r2);
+  padding:2px 8px;cursor:pointer;font-size:.68rem;
+  transition:background .15s;font-family:inherit;
+}
+.close-rec:hover{background:var(--muted)}
+.best-out{
+  background:var(--card);border-radius:var(--r3);
+  padding:12px;margin-top:8px;
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+  font-size:.78rem;display:none;position:relative;
+}
+.close-best-btn{
+  position:absolute;top:6px;right:8px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);border-radius:var(--r2);
+  padding:2px 8px;cursor:pointer;font-size:.68rem;
+  transition:background .15s;font-family:inherit;
+}
+.close-best-btn:hover{background:var(--muted)}
+
+/* ═══ 134 INPUT AREA ═══ */
+.s134-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.s134-scroll-wrap::-webkit-scrollbar{height:4px}
+.s134-scroll-wrap::-webkit-scrollbar-track{background:var(--muted);border-radius:2px}
+.s134-scroll-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+@media(max-width:899px){.s134-scroll-wrap #s134ScoreGrid>div{min-width:520px}}
+
+.mod134-section,.cmp134-section{
+  background:var(--card);
+  border:1px solid var(--border);border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+}
+.mod134-section{padding:8px;margin-top:6px}
+.mod134-hd{font-size:.72rem;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.mod134-row{display:flex;align-items:center;margin-bottom:5px;gap:5px;flex-wrap:nowrap}
+.mod134-lbl{font-size:.73rem;color:var(--text2);min-width:52px;flex-shrink:0;white-space:nowrap;font-weight:500}
+.mod134-sel,.mod134-inp{
+  height:28px;padding:0 6px;
+  border:1px solid var(--inp-bd);border-radius:var(--r2);
+  font-size:.74rem;background:var(--inp);color:var(--text);
+  font-family:inherit;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.mod134-sel:focus,.mod134-inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--rgb-a),.12)}
+.mod134-sel{width:auto;flex-shrink:0;cursor:pointer}
+.mod134-inp{width:62px;flex-shrink:0;text-align:center}
+.mod134-max{font-size:.65rem;color:var(--text2);white-space:nowrap}
+.cmp134-section{padding:10px;margin:6px 0}
+.cmp134-title{font-size:.76rem;font-weight:600;color:var(--text3);margin-bottom:6px}
+
+/* ═══ PRESET PANEL ═══ */
+.preset-toggle{
+  font-size:.7rem;font-weight:500;color:var(--col);
+  background:rgba(var(--rgb),.06);
+  border:1px solid rgba(var(--rgb),.2);
+  border-radius:var(--r);padding:4px 10px;
+  cursor:pointer;white-space:nowrap;
+  transition:background .15s;font-family:inherit;
+}
+.preset-toggle:hover{background:rgba(var(--rgb),.12)}
+.preset-panel{
+  background:var(--card);
+  border:1px solid rgba(var(--rgb),.2);
+  border-radius:var(--r3);padding:10px;
+  margin-bottom:8px;display:none;
+  box-shadow:var(--shadow-sm);
+}
+.preset-panel-inner{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.preset-title{font-size:.72rem;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+.preset-btn{
+  padding:10px 12px;
+  border:1px solid var(--border);border-radius:var(--r);
+  cursor:pointer;font-size:.76rem;font-weight:500;color:var(--text3);
+  background:var(--card);flex:1;min-width:120px;
+  transition:all .15s;text-align:left;font-family:inherit;
+  box-shadow:var(--shadow-sm);
+}
+.preset-btn:hover{background:var(--muted);border-color:var(--border2);color:var(--text);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.preset-btn-name{font-size:.8rem;font-weight:600;display:block;margin-bottom:3px;color:var(--col)}
+.preset-btn-desc{font-size:.66rem;color:var(--text2);line-height:1.45;font-weight:400}
+
+/* ═══ FUNCTION AREA ═══ */
+.fn-header{
+  text-align:center;font-weight:700;
+  padding:9px 14px;border-radius:var(--r);
+  color:var(--text2);background:var(--muted);
+  margin-bottom:12px;border:1px solid var(--border);
+  letter-spacing:.06em;text-transform:uppercase;
+  font-size:.7rem;
+}
+.fn-block{
+  background:var(--card);border-radius:var(--r3);
+  border:1px solid var(--border);margin-bottom:12px;
+  overflow:hidden;box-shadow:var(--shadow-sm);
+  transition:box-shadow .2s;
+}
+.fn-block:hover{box-shadow:var(--shadow-md)}
+.fn-block-hd{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 14px;
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  transition:background .25s;
+  flex-wrap:wrap;row-gap:6px;
+}
+.fn-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:22px;height:22px;
+  background:var(--accent);color:var(--accent-fg);
+  border-radius:50%;font-size:.68rem;font-weight:700;
+  flex-shrink:0;box-shadow:0 1px 4px rgba(var(--rgb-a),.3);
+}
+.fn-block-title{font-size:.88rem;font-weight:700;color:var(--text3);flex:1;line-height:1.3}
+.fn-block-acts{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+.fn-block-body{padding:14px}
+.fn-sub-hd{
+  font-size:.76rem;font-weight:700;color:var(--text3);
+  background:var(--muted);border-radius:var(--r);
+  padding:7px 12px;margin-bottom:10px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+}
+.fn-sub-hd::before{content:"";width:3px;height:12px;background:var(--accent);border-radius:2px;flex-shrink:0}
+
+/* ═══ COLUMN BIG TITLE ═══ */
+.col-big-title{
+  font-size:1.05rem;font-weight:800;color:var(--text);
+  text-align:center;padding:8px 0 12px;margin-bottom:14px;
+  border-bottom:2px solid var(--accent);letter-spacing:.03em;
+}
+
+/* ═══ 6-BOX PRESET COEFF GRID（PartA · 模型A vs 三种预设）═══ */
+.coeff6-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:899px){.coeff6-grid{grid-template-columns:1fr}}
+.coeff6-card{
+  background:rgba(var(--rgb-a),.05);border:1.5px solid rgba(var(--rgb-a),.25);
+  border-radius:var(--r3);padding:10px 12px;box-shadow:var(--shadow-sm);
+  transition:transform .2s,box-shadow .2s;
+}
+.coeff6-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.coeff6-title{
+  font-size:.8rem;font-weight:700;color:var(--colA);text-align:center;
+  margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(var(--rgb-a),.2);
+}
+.coeff6-row{display:flex;justify-content:space-between;align-items:center;font-size:.74rem;color:var(--text2);margin-bottom:5px;gap:6px}
+.coeff6-row:last-child{margin-bottom:0}
+.coeff6-num{font-size:1.05rem;font-weight:800;color:var(--colA);white-space:nowrap}
+
+/* ═══ PRESET DETAIL CARDS（PartA详情）═══ */
+.preset-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+@media(max-width:899px){.preset-detail-grid{grid-template-columns:1fr}}
+.preset-detail-card{border:1px solid rgba(var(--rgb-a),.3);border-radius:5px;overflow:hidden}
+.preset-detail-title{background:linear-gradient(135deg,var(--colA),rgba(var(--rgb-a),.55));color:#fff;font-size:.7rem;font-weight:700;padding:4px 8px;text-align:center}
+.preset-detail-tbl{width:100%;border-collapse:collapse;font-size:.72rem}
+.preset-detail-tbl td{padding:3px 6px;border-bottom:1px solid var(--border)}
+.preset-detail-tbl td:first-child{color:var(--text2)}
+.preset-detail-tbl td:last-child{font-weight:700;color:var(--colA);text-align:right}
+.preset-detail-tbl tr:last-child td{border-bottom:none}
+
+/* ═══ MISC ═══ */
+.no-hist{text-align:center;color:var(--text2);padding:16px;font-size:.78rem}
+.info{
+  font-size:.73rem;color:var(--text2);padding:8px 10px;
+  background:var(--muted);border-radius:var(--r);
+  line-height:1.6;border:1px solid var(--border);
+}
+
+/* ═══ SKIN OVERRIDES — retro ═══ */
+[data-skin="retro"] .dual-hist-table td{background:var(--inp);color:var(--text)}
+[data-skin="retro"] .preset-panel{border-color:rgba(74,106,138,.25)}
+[data-skin="retro"] .fn-block{background:var(--card)}
+[data-skin="retro"] select option{background:var(--inp);color:var(--text)}
+
+/* ═══ SKIN OVERRIDES — esport ═══ */
+[data-skin="esport"] .dual-hist-table td{background:var(--card2);color:var(--text)}
+[data-skin="esport"] .preset-panel{border-color:rgba(0,212,255,.2);background:rgba(0,212,255,.03)}
+[data-skin="esport"] .card{background:var(--card2)}
+[data-skin="esport"] .fn-block{background:var(--card2)}
+[data-skin="esport"] .fn-block-hd{background:linear-gradient(135deg,#0D1525,#0A1220);border-bottom-color:#0E2A48}
+[data-skin="esport"] .best-out{background:var(--card2)}
+[data-skin="esport"] .dual-rec{background:linear-gradient(135deg,#080E1A,#0C1420);border-left-color:#FFD700}
+[data-skin="esport"] .cmp-sec{background:var(--card2)}
+[data-skin="esport"] .tab-btn.active{background:var(--card);color:var(--accent);box-shadow:0 0 8px rgba(0,212,255,.2)}
+[data-skin="esport"] select option{background:var(--card2);color:var(--text)}
+[data-skin="esport"] .wrap{box-shadow:0 0 60px rgba(0,212,255,.12),0 0 120px rgba(255,45,120,.06),0 8px 32px rgba(0,0,0,.9);border-color:#0E2A48}
+[data-skin="esport"] .dual-col-a{--cdk:#007A9A;--rgb:0,212,255}
+[data-skin="esport"] .dual-col-b{--cdk:#AA1A50;--rgb:255,45,120}
+[data-skin="esport"] header{border-bottom-color:#0E2A48}
+[data-skin="esport"] .mod134-section{background:var(--card2)}
+[data-skin="esport"] #skinBtns .sk-btn.active{background:var(--card2);box-shadow:0 0 8px rgba(0,212,255,.3)}
+[data-skin="esport"] .preset-btn{background:var(--card2);border-color:#0E2A48;color:var(--text3)}
+[data-skin="esport"] .preset-btn:hover{background:#0A1525;border-color:rgba(0,212,255,.4);color:var(--accent)}
+[data-skin="esport"] .dual-col-fn{background:var(--bg2)}
+/* 发光边框 on cards */
+[data-skin="esport"] .coeff-ab{box-shadow:0 0 16px rgba(0,212,255,.25),inset 0 0 16px rgba(0,212,255,.04)}
+[data-skin="esport"] .coeff-ba{box-shadow:0 0 16px rgba(255,45,120,.25),inset 0 0 16px rgba(255,45,120,.04)}
+[data-skin="esport"] .fn-block{border-color:#0E2A48;box-shadow:0 0 12px rgba(0,212,255,.06)}
+[data-skin="esport"] .model-header{
+  box-shadow:0 0 10px rgba(var(--rgb),.2);
+  background:rgba(13,17,23,.82);
+  border-color:rgba(var(--rgb),.3);
+}
+[data-skin="esport"] select:focus,[data-skin="esport"] input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.2),0 0 12px rgba(0,212,255,.15)}
+/* 评分徽章 esport 风格 */
+[data-skin="esport"] .s134-score-pass{background:rgba(0,255,159,.12);color:#00FF9F;border-color:rgba(0,255,159,.3)}
+[data-skin="esport"] .s134-score-good{background:rgba(0,212,255,.12);color:#00D4FF;border-color:rgba(0,212,255,.3)}
+[data-skin="esport"] .s134-score-great{background:rgba(191,0,255,.12);color:#CF60FF;border-color:rgba(191,0,255,.3)}
+[data-skin="esport"] .s134-score-max{background:rgba(255,215,0,.12);color:#FFD700;border-color:rgba(255,215,0,.3)}
+[data-skin="esport"] .s134-score-below{background:rgba(255,45,120,.12);color:#FF2D78;border-color:rgba(255,45,120,.3)}
+[data-skin="esport"] .fn-sub-hd{background:rgba(0,212,255,.05);border-color:#0E2A48}
+[data-skin="esport"] .col-hd{background:rgba(0,212,255,.04);border-color:#0E2A48;color:var(--text3)}
+[data-skin="esport"] .col-hd:hover{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.3)}
+[data-skin="esport"] .fn-num{box-shadow:0 0 8px rgba(0,212,255,.4)}
+/* esport mob-tab */
+[data-skin="esport"] .mob-tab-bar{background:rgba(6,8,15,.95);border-top-color:#0E2A48;backdrop-filter:blur(12px)}
+[data-skin="esport"] .mob-tab.active{box-shadow:0 0 14px rgba(0,212,255,.45)}
+[data-skin="esport"] .col-hd::before{color:rgba(0,212,255,.7)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+  body{padding:4px;font-size:13px}
+  .cb-grid{grid-template-columns:1fr 1fr}
+  .row{flex-wrap:wrap}
+  .lbl{min-width:68px;font-size:.75rem;flex-shrink:0;line-height:1.4}
+  .mod134-row{flex-wrap:nowrap}
+  select#dA_race,select#dB_race{max-width:calc(100vw - 120px);font-size:.73rem}
+  .btn{max-width:130px}
+  .fn-block-body{padding:10px}
+  .dual-coeff-row{flex-wrap:nowrap}
+  .dual-coeff-card{min-width:0;flex:1}
+  /* 移动端 fn-block 间距收紧 */
+  .fn-block{margin-bottom:10px}
+  .fn-block-hd{padding:10px 12px}
+}
+@media(max-width:480px){
+  body{padding:2px;font-size:12px}
+  .cb-grid{grid-template-columns:1fr}
+  .btns{gap:5px}
+  .btn{font-size:.74rem;padding:0 8px}
+  h1{font-size:.9rem}
+  .lbl{min-width:58px;font-size:.73rem}
+  select#dA_race,select#dB_race{max-width:calc(100vw - 80px);font-size:.7rem}
+  .dual-coeff-card .big-num{font-size:1.45rem}
+  .mod134-max{font-size:.62rem;white-space:normal;word-break:break-word;max-width:56px}
+  .preset-btn{min-width:100px;padding:8px}
+  #dCmpResultPanel>div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  .fn-block-body{padding:9px}
+}
+@media(max-width:767px){
+  .save-btn-group{width:100%;display:flex;flex-wrap:wrap;gap:5px}
+  .save-btn-group .inline-btn{flex:1 1 calc(33% - 5px);min-width:0;text-align:center;font-size:.7rem;height:30px;padding:0 4px}
+}
+@media(min-width:900px){
+  .fn-block-acts{flex-wrap:nowrap}
+  .fn-block-body.tbl-scroll{overflow-x:auto}
+  select#dA_race,select#dB_race{max-width:400px}
+  .row{flex-wrap:nowrap}
+  .lbl{min-width:90px}
+}
+</style>
+</head>
+<body>
+<div id="toast-container" style="position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+<div id="welcome-overlay" style="display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.55);align-items:center;justify-content:center">
+  <div style="background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:22px 24px;max-width:370px;width:93%;box-shadow:0 12px 40px rgba(0,0,0,.4);position:relative">
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:1.15rem;font-weight:800;color:var(--accent);margin-bottom:4px">🎮 欢迎使用本改造助手！</div>
+      <div style="font-size:.75rem;color:var(--text2)">标题下方可以选择本系统皮肤</div>
+    </div>
+    <div style="font-size:.82rem;color:var(--text);line-height:1.75;background:var(--card2);border-radius:8px;padding:12px 14px;border:1px solid var(--border)">
+      <div style="font-weight:700;margin-bottom:6px;color:var(--text3)">📖 本系统入门教程：</div>
+      <div><strong>1.</strong> 在"模型填写"栏中填写模型A的基础参数与改造参数</div>
+      <div><strong>2.</strong> 系统自动使用三种快捷预设作为对手模型进行对比，无需再手动填写第二个模型</div>
+      <div><strong>3.</strong> 前往"数据面板"查看暴击区系数与改造评分，"功能模块"中可保存记录、获取优化建议与改造对比</div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)">
+        <div style="font-weight:700;color:var(--text3);margin-bottom:4px">📋 功能说明：</div>
+        <div><strong>(1) 暴击区增伤系数：</strong>与双方整套第二条动态挂钩，不同受击模型数据不同。<br>
+        <span style="color:var(--text2);font-size:.78rem">（对脆皮、免爆、爆减各不同）</span></div>
+        <div style="margin-top:5px"><strong>(2) 一三四条增伤系数：</strong>分三个流派评分，与敌方受击模型无关。<br>
+        <span style="color:var(--text2);font-size:.78rem">输出流主要参考增伤和合计；减伤流主要参考减伤和合计；混合流主要参考合计。</span></div>
+      </div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)">
+        <div style="font-weight:700;color:var(--text3);margin-bottom:4px">❓ 常见问题：</div>
+        <div><strong>Q:</strong> 我用的芯片不在里面？<br><span style="color:var(--text2);font-size:.78rem">A: 仅选择与暴击区有关芯片即可。</span></div>
+        <div style="margin-top:4px"><strong>Q:</strong> 职业不同，配件没满怎么办？<br><span style="color:var(--text2);font-size:.78rem">A: 可在基础数值的增幅栏增减数值。</span></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button onclick="document.getElementById('welcome-overlay').style.display='none'" style="padding:8px 28px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;transition:.2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">✅ 我知道了，开始使用！</button>
+    </div>
+  </div>
+</div>
+<div id="confirm-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);align-items:center;justify-content:center">
+  <div id="confirm-box" style="background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:20px 24px;max-width:320px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,.3)">
+    <div id="confirm-msg" style="font-size:.92rem;color:var(--text);margin-bottom:16px;line-height:1.5"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button id="confirm-cancel" style="padding:6px 16px;border:1.5px solid var(--border);border-radius:6px;background:var(--card2);color:var(--text2);cursor:pointer;font-size:.82rem;font-weight:600">取消</button>
+      <button id="confirm-ok" style="padding:6px 16px;border:none;border-radius:6px;background:var(--accent);color:#fff;cursor:pointer;font-size:.82rem;font-weight:600">确定</button>
+    </div>
+  </div>
+</div>
+<div id="prompt-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);align-items:center;justify-content:center">
+  <div style="background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:20px 24px;max-width:320px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,.3)">
+    <div id="prompt-msg" style="font-size:.92rem;color:var(--text);margin-bottom:10px;line-height:1.5"></div>
+    <input id="prompt-input" type="text" style="width:100%;padding:7px 10px;border:1.5px solid var(--inp-bd);border-radius:6px;background:var(--inp);color:var(--text);font-size:.85rem;margin-bottom:14px">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button id="prompt-cancel" style="padding:6px 16px;border:1.5px solid var(--border);border-radius:6px;background:var(--card2);color:var(--text2);cursor:pointer;font-size:.82rem;font-weight:600">取消</button>
+      <button id="prompt-ok" style="padding:6px 16px;border:none;border-radius:6px;background:var(--accent);color:#fff;cursor:pointer;font-size:.82rem;font-weight:600">确定</button>
+    </div>
+  </div>
+</div>
+<div id="report-preview-overlay" onclick="if(event.target===this)closeReportPreview()" style="display:none;position:fixed;inset:0;z-index:10002;background:rgba(0,0,0,.78);padding:12px;align-items:center;justify-content:center">
+  <div style="width:min(700px,96vw);max-height:96dvh;background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:10px;box-shadow:0 14px 48px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--text)">
+      <span style="font-size:.82rem;font-weight:700">结论图预览（可直接截图）</span>
+      <button onclick="closeReportPreview()" aria-label="关闭结论图预览" style="border:0;border-radius:6px;background:var(--muted);color:var(--text);font-size:1.05rem;line-height:1;padding:5px 9px;cursor:pointer">×</button>
+    </div>
+    <img id="report-preview-image" alt="生成的结论图" style="display:block;width:100%;max-height:calc(96dvh - 72px);object-fit:contain;border-radius:6px;border:1px solid var(--border);background:#fff">
+  </div>
+</div>
+<div class="wrap">
+<header>
+  <div class="hd-title-block">
+    <h1>改造智能助手·预设版</h1>
+    <div class="subtitle">适用于共创服 · v1.2 ·此版本于26.8.12更新 </div>
+    <div class="subtitle" style="opacity:.75;font-size:.65rem;margin-top:2px">💡 支持一键生成改造报告</div>
+  </div>
+  <div class="hd-right-block">
+    <div class="hd-row2">
+      <span class="mob-skin-label">皮肤</span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="skinBtns">
+        <button class="sk-btn active" data-theme="minimal" onclick="setSkin('minimal',this)"><span class="sk-dot" style="background:#3B82F6"></span>极简风</button>
+        <button class="sk-btn" data-theme="esport" onclick="setSkin('esport',this)"><span class="sk-dot" style="background:#38BDF8"></span>赛博风</button>
+        <button class="sk-btn" data-theme="retro" onclick="setSkin('retro',this)"><span class="sk-dot" style="background:#9A7B5A"></span>护眼风</button>
+      </div>
+      <div class="hd-tut-group">
+        <button class="tut-btn" onclick="window.open('https://sps.yy-gp.com/hfg10/i.html')">公告</button>
+        <button class="tut-btn" onclick="document.getElementById('welcome-overlay').style.display='flex'">教程</button>
+      </div>
+    </div>
+    <div class="view-toggle">
+
+    </div>
+  </div>
+</header>
+
+<div id="dualView" style="display:flex;flex-direction:column">
+  <div class="dual-main">
+    <div class="dual-col-a" id="colA">
+      <div class="col-big-title">📝 模型填写</div>
+      <div class="model-header">
+        <span>⚔ 模型 A</span>
+        <button class="preset-toggle" onclick="togglePresetPanel('A')">快捷预设</button>
+      </div>
+      <div id="presetHolder_A"></div>
+      <div class="col-sec">
+        <div class="col-hd" onclick="toggleSec('dA_common')">模型A基础参数</div>
+        <div id="dA_common" class="col-body"><div class="card" id="dualCommon_A"></div><div class="card" id="dualAtk_A"></div></div>
+      </div>
+      <div class="col-sec" style="display:none">
+        <div class="col-hd" onclick="toggleSec('dA_atk')">模型A攻击参数</div>
+        <div id="dA_atk" class="col-body"></div>
+      </div>
+      <div class="col-sec">
+        <div class="col-hd" onclick="toggleSec('dA_mod')">模型A改造参数</div>
+        <div id="dA_mod" class="col-body"><div class="card" id="modCard_A"></div></div>
+      </div>
+    </div>
+    <div class="dual-col-b" id="colB">
+      <div class="col-big-title">📊 数据面板</div>
+      <div class="fn-block">
+        <div class="fn-block-hd" style="flex-wrap:wrap;gap:6px">
+          <span class="fn-block-title">最终面板与改造评分</span>
+          <div class="fn-block-acts">
+            <button class="icon-btn" id="toggleDetailBtn" onclick="toggleDetailTable()">📋 显示PartA详情</button>
+            <button class="icon-btn" id="toggle134Btn" onclick="toggle134Detail()">📋 显示PartB详情</button>
+          </div>
+        </div>
+        <div class="fn-block-body">
+          <div class="fn-sub-hd">PartA · 第二条暴击区增伤系数（模型A vs 三种快捷预设）</div>
+          <div style="font-size:.72rem;color:var(--text2);line-height:1.6;padding:5px 8px 6px;background:var(--card2);border-radius:4px;border-left:3px solid var(--border);margin-bottom:6px">
+            分别展示模型A攻击三种预设受击模型时的增伤系数，以及三种预设攻击模型A时模型A的受击系数（即原"B对A系数"）。
+          </div>
+          <div id="coeff6GridWrapper" class="coeff6-grid"></div>
+          <div id="detailTableWrapper" style="display:none"></div>
+          <div class="fn-sub-hd" style="margin-top:10px">PartB · 第一三四条改造系数（模型A）</div>
+          <div style="font-size:.72rem;color:var(--text2);line-height:1.6;padding:5px 8px 6px;background:var(--card2);border-radius:4px;border-left:3px solid var(--border);margin-bottom:6px">
+            独立于第二条，与受击模型无关。请先根据武器类别准确选择"攻击参数"中"武器增伤计算公式"。<br>
+            ！！输出流、减免流、混合流，三个流派不可得兼 ！！纯输出参考输出流、纯减免参考减免流、混合流参考合计。减免流评分标准，会随改造中第四条选择轻减数动态提升<br>
+            注：本算法中，攻击力、护甲值有较高权重，混合流（合计）为综合对枪强度。及格约为16条平均紫，良好约为16条平均金紫、优秀为16条平均全金。采用加成破防区间内算法，若跨区间可能有误差
+          </div>
+          <div class="s134-scroll-wrap"><div id="s134ScoreGrid"></div></div>
+          <div id="s134DetailWrapper" style="display:none"></div>
+          <div id="shieldExpandNote" style="font-size:0.7rem;color:var(--warn-brown);margin-top:6px;border-top:1px dashed var(--s134-border);padding-top:5px;display:none;">🛡 注：勾选"盾牌展开"后，护甲额外+10（已计入护甲值）</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;text-align:center">
+        <button class="inline-btn" id="reportShareBtn" onclick="generateReportImage()" style="background:linear-gradient(135deg,var(--colA),var(--accent2));font-size:.86rem;padding:11px 24px;border-radius:9px;box-shadow:0 3px 10px rgba(var(--rgb-a),.35)">📥 一键生成结论图</button>
+      </div>
+    </div>
+    <div class="dual-col-fn" id="colFn">
+      <div class="col-big-title">⚙ 功能模块</div>
+
+      <div class="fn-block">
+        <div class="fn-block-hd" style="flex-wrap:wrap;gap:6px">
+          <span class="fn-num">一</span>
+          <span class="fn-block-title">保存数据</span>
+          <div class="fn-block-acts save-btn-group">
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--accent),var(--accent2))" onclick="dualSaveRec()">💾 保存</button>
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--green),#6D9980)" onclick="exportDualHistTxt()">📄 TXT导出</button>
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--purple),#8A6B7A)" onclick="exportDualHistExcel()">📊 Excel备份</button>
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--gold),#A7967E)" onclick="importDualHistExcel()">📥 Excel导入</button>
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--red),#997060)" onclick="clearHist('dualHistory',dualRenderHist)">🗑 清空</button>
+          </div>
+        </div>
+        <div class="fn-block-body tbl-scroll" style="padding:8px;overflow-x:auto">
+          <table class="dual-hist-table" id="dualHistTbl">
+            <thead>
+              <tr>
+                <th>序号</th><th>名称</th><th>武器</th>
+                <th>预设A 攻/受系数</th><th>预设B 攻/受系数</th><th>预设C 攻/受系数</th>
+                <th>134增伤</th><th>134减伤</th><th>134合计</th>
+                <th>输出流</th><th>减免流</th><th>输出混减免</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="dualHistBody"><tr><td colspan="13" class="no-hist">暂无记录</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="fn-block">
+        <input type="hidden" id="dBestTarget" value="AB">
+        <input type="hidden" id="dBestModel" value="A">
+        <input type="hidden" id="dOptTarget" value="AB">
+        <input type="hidden" id="dOptMode" value="atk">
+        <input type="hidden" id="dOptPresetKey" value="human_fragile">
+        <div class="fn-block-hd" style="flex-wrap:wrap;gap:4px;padding:10px 14px;align-items:center">
+          <span class="fn-num">二</span>
+          <div style="flex:1;min-width:160px">
+            <div style="font-size:.97rem;font-weight:800;color:var(--text3);line-height:1.25">智能优化与最佳方案</div>
+            <div style="font-size:.72rem;color:var(--text2);font-style:italic;margin-top:2px">攻击视角：系数越高越好｜防御视角：受击系数越低越好（共6个预设方案可选）</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap">
+            <select id="dUnifiedTarget" onchange="syncOptTarget(this.value)" style="max-width:200px;padding:5px 6px;font-size:.78rem;border:1.5px solid var(--inp-bd);border-radius:var(--r2);background:var(--inp);color:var(--text)"></select>
+            <button class="inline-btn" id="autoBestBtn" style="background:linear-gradient(135deg,#8B9BA8,var(--blue));padding:6px 10px;white-space:nowrap" onclick="dualAutoBest()">🔍 自动最佳示例</button>
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--gold),#A7967E);padding:6px 10px;white-space:nowrap" onclick="dualSmartOpt()">💡 自动优化建议</button>
+          </div>
+        </div>
+        <div class="fn-block-body">
+          <div id="dualCalcLoad" style="text-align:center;color:var(--text2);font-style:italic;padding:10px;display:none">⏳ 后台计算中，界面不会卡顿...</div>
+          <div class="best-out" id="dBestOut"></div>
+          <div class="dual-rec" id="dualRecSec">
+            <button class="close-rec" onclick="document.getElementById('dualRecSec').style.display='none'">✕</button>
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchDualTab('dAna',this)">状态分析</button>
+              <button class="tab-btn" onclick="switchDualTab('dOpt',this)">优化策略</button>
+            </div>
+            <div id="dAna" class="tab-body active"></div>
+            <div id="dOpt" class="tab-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fn-block">
+        <div class="fn-block-hd">
+          <span class="fn-num">三</span>
+          <span class="fn-block-title">某一部位不同改造对比</span>
+          <div class="fn-block-acts">
+            <button class="inline-btn" style="background:linear-gradient(135deg,var(--purple),#8A6B7A)" onclick="togglePanel('dualCmpPanel')">⚖ 点击展开改造对比</button>
+          </div>
+        </div>
+        <div class="fn-block-body">
+          <div class="cmp-sec" id="dualCmpPanel">
+            <div class="sec-title">改造对比（固定为模型A）</div>
+            <div style="display:flex;align-items:center;flex-wrap:nowrap;gap:6px;margin-bottom:8px">
+              <span class="lbl" style="min-width:auto;white-space:nowrap;flex-shrink:0">对比预设：</span>
+              <select id="dCmpPresetKey" style="width:auto;max-width:130px;flex-shrink:0" onchange="updCmpWeapCatHint()"></select>
+              <span class="lbl" style="min-width:auto;white-space:nowrap;flex-shrink:0;margin-left:4px">部位：</span>
+              <select id="dCmpPart" style="width:auto;flex:1;min-width:0;max-width:140px" onchange="updDualCmpLim()">
+                <option value="">-- 选择 --</option><option value="A">大件A 护甲</option>
+                <option value="B">大件B 武器</option><option value="C">小件A 帽子</option><option value="D">小件B 护盾</option>
+              </select>
+            </div>
+            <div id="cmpWeapCatHint" style="background:var(--s134-bg1);border:1px solid var(--s134-border);border-radius:5px;padding:5px 8px;font-size:.75rem;line-height:1.5;margin-bottom:8px">
+              <span style="font-weight:700;color:var(--s134-title)">当前武器增伤公式：</span><span id="cmpWeapCatLabel" style="color:var(--s134-val);font-weight:700">-</span><br>
+              <span style="color:var(--text2);font-style:italic"⚠️ 请在模型A的基础参数中准确选择武器增伤计算公式，会影响改造评分的计算</span>
+            </div>
+            <div class="cmp134-section">
+              <div class="cmp134-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+                <span>改造对比</span>
+                <div style="display:flex;gap:5px;flex-wrap:wrap">
+                  <button class="inline-btn" style="background:linear-gradient(135deg,var(--colA),var(--accent2));font-size:.72rem" onclick="copyCmpFrom('A')">📋 从模型A复制配置</button>
+                </div>
+              </div>
+              <div id="cmp134Plans"></div>
+            </div>
+            <div class="btns">
+              <button class="btn btn-p" onclick="doDualCmp()">开始对比</button>
+              <button class="btn btn-w" onclick="togglePanel('dualCmpPanel')">关闭</button>
+            </div>
+            <div class="info">选定部位后，该部位原数据将被剔除，用两组新数值分别计算对应方向的增伤系数</div>
+
+            <!-- 对比结果面板 -->
+            <div id="dCmpResultPanel" style="display:none;margin-top:10px">
+
+              <!-- ① 顶部结论区 —— 参数输入框上方 -->
+              <div id="dCmpSummary" style="background:var(--card);border:1.5px solid var(--accent);border-radius:var(--r);padding:10px 12px;margin-bottom:8px">
+                <div style="font-size:.82rem;font-weight:700;color:var(--text3);margin-bottom:6px">📊 对比结论</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <!-- 第二条胜负（攻击） -->
+                  <div style="flex:1;min-width:140px;background:var(--card2);border-radius:5px;padding:6px 8px">
+                    <div style="font-size:.7rem;color:var(--text2);margin-bottom:3px">⚔ 我方攻击暴击系数</div>
+                    <div id="dCmpVerdict_r2" style="font-size:.82rem;font-weight:700;color:var(--text3)">-</div>
+                    <div id="dCmpDiff_r2" style="font-size:.72rem;color:var(--text2);margin-top:2px"></div>
+                  </div>
+                  <!-- 第二条胜负（受击，数值越低越好） -->
+                  <div style="flex:1;min-width:140px;background:var(--card2);border-radius:5px;padding:6px 8px">
+                    <div style="font-size:.7rem;color:var(--text2);margin-bottom:3px">🛡 我方受击暴击系数</div>
+                    <div id="dCmpVerdict_def" style="font-size:.82rem;font-weight:700;color:var(--text3)">-</div>
+                    <div id="dCmpDiff_def" style="font-size:.72rem;color:var(--text2);margin-top:2px"></div>
+                  </div>
+                  <!-- 一三四胜负 -->
+                  <div style="flex:1;min-width:140px;background:var(--card2);border-radius:5px;padding:6px 8px">
+                    <div style="font-size:.7rem;color:var(--text2);margin-bottom:3px">📋 一三四系数合计</div>
+                    <div id="dCmpVerdict_134" style="font-size:.82rem;font-weight:700;color:var(--text3)">-</div>
+                    <div id="dCmpDiff_134" style="font-size:.72rem;color:var(--text2);margin-top:2px"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ② 左右改造1/2 详情 -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+                <!-- 改造1 -->
+                <div style="background:var(--card);border:2px solid rgba(var(--rgb-a),.35);border-radius:var(--r);padding:8px">
+                  <div style="text-align:center;font-weight:700;font-size:.88rem;color:var(--colA);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(var(--rgb-a),.25)">🔧 改造方案 1</div>
+                  <!-- PartA -->
+                  <div style="font-size:.72rem;font-weight:700;color:var(--text3);margin:0 0 4px;padding:2px 5px;background:rgba(var(--rgb-a),.08);border-radius:3px">PartA · 暴击区</div>
+                  <div style="font-size:.78rem;margin-bottom:2px">净暴击：<span style="font-weight:700;color:var(--colA)" id="dc1nc">-</span></div>
+                  <div style="font-size:.78rem;margin-bottom:2px">实际暴伤：<span style="font-weight:700;color:var(--colA)" id="dc1nd">-</span>%</div>
+                  <div style="font-size:.78rem;margin-bottom:2px">我方攻击暴击系数：<span style="font-weight:800;color:var(--colA);font-size:.88rem" id="dc1co">-</span>%</div>
+                  <div style="font-size:.78rem;margin-bottom:6px;color:var(--text2)">我方受击暴击系数：<span style="font-weight:800;font-size:.88rem" id="dc1co_def">-</span>%</div>
+                  <!-- PartB -->
+                  <div style="font-size:.72rem;font-weight:700;color:var(--text3);margin:0 0 4px;padding:2px 5px;background:rgba(var(--rgb-a),.08);border-radius:3px">PartB · 一三四系数</div>
+                  <div style="font-size:.78rem;margin-bottom:2px;color:var(--cmp-atk)">增伤：<span style="font-weight:700" id="dc1_134atk">-</span></div>
+                  <div style="font-size:.78rem;margin-bottom:2px;color:var(--cmp-def)">减伤：<span style="font-weight:700" id="dc1_134def">-</span></div>
+                  <div style="font-size:.78rem;color:var(--cmp-sum);font-weight:700">合计：<span id="dc1_134sum">-</span></div>
+                </div>
+                <!-- 改造2 -->
+                <div style="background:var(--card);border:2px solid rgba(var(--rgb-b),.35);border-radius:var(--r);padding:8px">
+                  <div style="text-align:center;font-weight:700;font-size:.88rem;color:var(--colB);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(var(--rgb-b),.25)">🔧 改造方案 2</div>
+                  <!-- PartA -->
+                  <div style="font-size:.72rem;font-weight:700;color:var(--text3);margin:0 0 4px;padding:2px 5px;background:rgba(var(--rgb-b),.08);border-radius:3px">PartA · 暴击区</div>
+                  <div style="font-size:.78rem;margin-bottom:2px">净暴击：<span style="font-weight:700;color:var(--colB)" id="dc2nc">-</span></div>
+                  <div style="font-size:.78rem;margin-bottom:2px">实际暴伤：<span style="font-weight:700;color:var(--colB)" id="dc2nd">-</span>%</div>
+                  <div style="font-size:.78rem;margin-bottom:2px">我方攻击暴击系数：<span style="font-weight:800;color:var(--colB);font-size:.88rem" id="dc2co">-</span>%</div>
+                  <div style="font-size:.78rem;margin-bottom:6px;color:var(--text2)">我方受击暴击系数：<span style="font-weight:800;font-size:.88rem" id="dc2co_def">-</span>%</div>
+                  <!-- PartB -->
+                  <div style="font-size:.72rem;font-weight:700;color:var(--text3);margin:0 0 4px;padding:2px 5px;background:rgba(var(--rgb-b),.08);border-radius:3px">PartB · 一三四系数</div>
+                  <div style="font-size:.78rem;margin-bottom:2px;color:var(--cmp-atk)">增伤：<span style="font-weight:700" id="dc2_134atk">-</span></div>
+                  <div style="font-size:.78rem;margin-bottom:2px;color:var(--cmp-def)">减伤：<span style="font-weight:700" id="dc2_134def">-</span></div>
+                  <div style="font-size:.78rem;color:var(--cmp-sum);font-weight:700">合计：<span id="dc2_134sum">-</span></div>
+                </div>
+              </div>
+
+              <!-- ③ 视角说明 -->
+              <div id="dCmpViewNote" style="font-size:.72rem;color:var(--text2);margin-top:6px;padding:5px 8px;background:var(--card2);border-radius:4px;border-left:3px solid var(--accent)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- 隐藏的模型B表单（仅供内部计算三种预设受击/攻击数据使用，用户无需也无法直接编辑） -->
+<div id="hiddenModelB" style="display:none" aria-hidden="true">
+  <div id="presetHolder_B"></div>
+  <div id="dualCommon_B"></div>
+  <div id="dualAtk_B"></div>
+  <div id="modCard_B"></div>
+</div>
+</div>
+
+<div class="mob-tab-bar">
+  <button class="mob-tab active" onclick="switchMobTab(0,this)">
+    <div style="font-size:1.3rem;line-height:1">📝</div>
+    <div style="font-size:.72rem;margin-top:3px">模型填写</div>
+  </button>
+  <button class="mob-tab" onclick="switchMobTab(1,this)">
+    <div style="font-size:1.3rem;line-height:1">📊</div>
+    <div style="font-size:.72rem;margin-top:3px">数据面板</div>
+  </button>
+  <button class="mob-tab" onclick="switchMobTab(2,this)">
+    <div style="font-size:1.3rem;line-height:1">⚙</div>
+    <div style="font-size:.72rem;margin-top:3px">功能模块</div>
+  </button>
+</div>
+
+<!-- QRCode Generator for JavaScript (MIT License, Copyright (c) 2009 Kazuhiko Arase) https://github.com/kazuhikoarase/qrcode-generator —— 用于"一键分享报告图"功能离线生成二维码，压缩后内嵌 -->
+<script>var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(o*r,n*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});</script>
+<script>
+/* §1 常量 */
+const RACE_DATA={human:{crit:186.8,dmg:21,dodge:186,reduc:16},halfhuman:{crit:186.8,dmg:21,dodge:186,reduc:0},mechbone:{crit:192.8,dmg:21,dodge:186,reduc:16}};
+const ATK_CHIPS=[['cLH',22.3,9,'+22.3暴击,+9%暴伤'],['cZZ',18.4,0,'+18.4暴击'],['cHS',14.6,0,'+14.6暴击'],
+  ['cBL',9.7,13.6,'+9.7暴击,+13.6%暴伤'],['cYC',14.5,0,'+14.5暴击'],['cSR',11.5,0,'+11.5暴击'],['cWJ',12.3,12.3,'+12.3暴击,+12.3%暴伤']];
+const DEF_CHIPS=[['eJR',9.5,0,'+9.5免暴'],['eCJ',8.5,0,'+8.5免暴'],['ePS',0,15.6,'+15.6%暴减'],['eYG',0,13.2,'+13.2%暴减'],['eQF',0,9,'+9%暴减']];
+const ATK_CHIP_NAMES={cLH:'连环',cZZ:'专注',cHS:'好事',cBL:'爆裂',cYC:'远程',cSR:'势如',cWJ:'无坚'};
+const DEF_CHIP_NAMES={eJR:'坚韧',eCJ:'重甲',ePS:'磐石',eYG:'以攻',eQF:'全副'};
+const MOD_LIM={big:{crit:15,dodge:15,dmg:25,reduc:25},small:{crit:7.5,dodge:7.5,dmg:12.5,reduc:12.5}};
+const WEAPON_OPTIONS=`<option value="0,0">无武器</option>
+  <option value="6,16" class="PFXR-halfhuman" style="display:none">步枪(半人)：+6暴击,+16%暴伤</option>
+  <option value="12,16" class="PFXR-human">步枪(人类)：+12暴击,+16%暴伤</option>
+  <option value="16,28">霰弹：+16暴击,+28%暴伤</option><option value="16,24">喷火：+16暴击,+24%暴伤</option>
+  <option value="14,0">手枪：+14暴击</option><option value="10,24">弓：+10暴击,+24%暴伤</option>
+  <option value="6,0">狙：+6暴击</option><option value="12,16">炮：+12暴击,+16%暴伤</option><option value="26,0">刀：+26暴击</option>`;
+const MOD134_CFG={
+  A:{r1:[['armor1','护甲',10]],r3:[['','无',0],['bonus3','加成',10],['expl3','爆炸',10],['pdef3','玩家减免',10]],r4:[['','无',0],['spd4','射速',10],['bonus4','加成',10],['ldef4','轻型减免',15]]},
+  B:{r1:[['atk1','攻击',10]],r3:[['','无',0],['bonus3','加成',10],['expl3','爆炸',10],['pdef3','玩家减免',10]],r4:[['','无',0],['spd4','射速',10],['bonus4','加成',10],['ldef4','轻型减免',15]]},
+  C:{r1:[['bonus3','加成',12]],r3:[['','无',0],['bonus3','加成',5],['expl3','爆炸',5],['pdef3','玩家减免',5]],r4:[['','无',0],['spd4','射速',5],['bonus4','加成',5],['ldef4','轻型减免',7.5]]},
+  D:{r1:[['','无',0]],r3:[['','无',0],['bonus3','加成',5],['expl3','爆炸',5],['pdef3','玩家减免',5]],r4:[['','无',0],['spd4','射速',5],['bonus4','加成',5],['ldef4','轻型减免',7.5]]},
+  SHIELD:{r3:[['','无',0],['bonus3','加成',10],['expl3','爆炸',10],['pdef3','玩家减免',10]],r4:[['','无',0],['spd4','射速',10],['bonus4','加成',10],['ldef4','轻型减免',10]]}
+};
+const HIST_MAX = 50;
+/* 动态读取皮肤 CSS 变量，保证进度条颜色跟主题联动 */
+function getScoreColor(level){
+  return getComputedStyle(document.documentElement).getPropertyValue(`--score-${level}`).trim()||'#ccc';
+}
+
+/* §2 工具 */
+const $=id=>document.getElementById(id);
+const fv=(id,def=0)=>{const v=parseFloat($(id)?.value);return isNaN(v)?def:v;};
+const chk=id=>!!($(id)&&$(id).checked);
+const get134RowMax=(slot,row,val)=>{if(!val)return 0;const cfg=MOD134_CFG[slot];if(!cfg||!cfg[row])return 0;const f=cfg[row].find(o=>o[0]===val);return f?f[2]:0;};
+const cleanWeapName=text=>text.replace(/[（(].*?[)）]/g,'').trim();
+
+/* ── Toast ── */
+function showToast(msg,type='info',dur=2600){
+  const c=$('toast-container');if(!c)return;
+  const bg={info:'var(--accent)',ok:'var(--green)',warn:'var(--gold)',err:'var(--red)'}[type]||'var(--accent)';
+  const t=document.createElement('div');
+  t.style.cssText=`pointer-events:auto;background:${bg};color:#fff;padding:9px 16px;border-radius:8px;font-size:.84rem;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.25);opacity:1;transition:opacity .4s;max-width:280px;word-break:break-all`;
+  t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),420);},dur);
+}
+
+/* ── 内联确认框（返回 Promise<boolean>）── */
+function showConfirm(msg){
+  return new Promise(res=>{
+    const ov=$('confirm-overlay'),msgEl=$('confirm-msg');
+    ov.style.display='flex';msgEl.textContent=msg;
+    const ok=$('confirm-ok'),cancel=$('confirm-cancel');
+    const done=v=>{ov.style.display='none';ok.onclick=null;cancel.onclick=null;res(v);};
+    ok.onclick=()=>done(true);cancel.onclick=()=>done(false);
+  });
+}
+
+/* ── 内联输入框（返回 Promise<string|null>）── */
+function showPrompt(msg,def=''){
+  return new Promise(res=>{
+    const ov=$('prompt-overlay'),msgEl=$('prompt-msg'),inp=$('prompt-input');
+    ov.style.display='flex';msgEl.textContent=msg;inp.value=def;
+    setTimeout(()=>inp.focus(),80);
+    const ok=$('prompt-ok'),cancel=$('prompt-cancel');
+    const done=v=>{ov.style.display='none';ok.onclick=null;cancel.onclick=null;inp.onkeydown=null;res(v);};
+    ok.onclick=()=>done(inp.value||def);
+    cancel.onclick=()=>done(null);
+    inp.onkeydown=e=>{if(e.key==='Enter')done(inp.value||def);if(e.key==='Escape')done(null);};
+  });
+}
+
+/* ── localStorage 安全包装 ── */
+function lsGet(key,def='[]'){try{return localStorage.getItem(key)??def;}catch{return def;}}
+function lsSet(key,val){try{localStorage.setItem(key,val);return true;}catch(err){showToast('存储空间不足，保存失败！','err',3500);return false;}}
+
+/* ── 防抖工具 ── */
+function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+
+/* ── Worker 单例 ── */
+let _worker=null,_workerBusy=false;
+/* ── buildFnDetail 初始化标志 ── */
+let _fnDetailBuilt=false;
+function getWorker(){
+  if(!_worker){
+    const blob=new Blob([WORKER_SRC],{type:'application/javascript'});
+    const url=URL.createObjectURL(blob);
+    _worker=new Worker(url);
+  }
+  return _worker;
+}
+
+function onShieldR2Chg(pfx){
+  const P=pfx?`d${pfx}_`:'',val=$(P+'shield_r2t')?.value||'',inp=$(P+'shield_r2v'),lbl=$(P+'shield_r2x');
+  const limMap={dodge:15,reduc:25,dmg:25};
+  const maxV=limMap[val]||0;
+  if(inp){
+    inp.disabled=!val;
+    if(!val)inp.value=0;
+    else{inp.max=maxV;clampInput(inp,maxV);}
+  }
+  if(lbl)lbl.textContent=maxV?`≤${maxV}${val==='dmg'||val==='reduc'?'%':''}`:'' ;
+  dualCalcNow();
+}
+
+function onShieldRow134Chg(pfx,row){
+  const P=pfx?`d${pfx}_`:'';
+  const val=$(P+`shield134_${row}t`)?.value||'';
+  const inp=$(P+`shield134_${row}v`),lbl=$(P+`shield134_${row}x`);
+  const maxV=val?get134RowMax('SHIELD',row,val):0;
+  if(inp){
+    inp.disabled=!val||!maxV;
+    if(!val||!maxV)inp.value=0;
+    else{inp.max=maxV;clampInput(inp,maxV);}
+  }
+  if(lbl)lbl.textContent=maxV?`≤${maxV}`:'';
+  dualCalcNow();
+}
+
+/* §3 核心计算 */
+/* ── 一三四系数权重常量（统一定义，避免散落在各处） ── */
+const COEFF_W={
+  atk1:0.015, armor1:0.015,
+  bonus3:0.005, pdef3:0.005, bonus4:0.005, ldef4:0.005,
+  /* expl3 / spd4 根据武器类型动态取值，见 get134Weight() */
+};
+function get134Weight(key,weapCat){
+  if(key==='expl3') return weapCat==='grenade'?0.01:0;
+  if(key==='spd4')  return weapCat==='duelball'?0.01:0.005;
+  return COEFF_W[key]??0;
+}
+
+/* ── 暴击区系数（主线程与Worker共用同一公式，Worker内联字符串同步） ── */
+function calcCoeff(nc,td,dr){
+  if(nc<=0)return 1;
+  const lc=Math.min(nc,100);
+  const ad=Math.max(25,50+td-Math.max(0,dr));
+  return lc/100*ad/100+1;
+}
+
+/* ── 统一输入值校验 clamp（避免六处重复） ── */
+function clampInput(inp,maxV,showWarn=true){
+  if(!inp)return 0;
+  let v=parseFloat(inp.value)||0;
+  if(v>maxV){v=maxV;inp.value=maxV;if(showWarn)showToast(`数值过高，已自动限制为 ${maxV}`,'warn',2000);}
+  else if(v<0){v=0;inp.value=0;}
+  return v;
+}
+
+/* ── 统一 DOM 值更新 + 闪烁动画（主线程全局共用） ── */
+function updEl(id,v){
+  const el=$(id);if(!el)return;
+  if(el.textContent!==v){
+    el.textContent=v;
+    el.classList.remove('val-updated');
+    void el.offsetWidth;
+    el.classList.add('val-updated');
+  }
+}
+
+function getModelStats(pfx){
+  const P=pfx?`d${pfx}_`:'';
+  const raceRaw=$(P+'race').value,raceType=raceRaw.includes(',')?raceRaw.split(',')[1]:raceRaw;
+  const r=RACE_DATA[raceType];
+  let crit=r.crit,dmg=r.dmg,dodge=r.dodge,reduc=r.reduc;
+  ATK_CHIPS.forEach(([id,c,d])=>{if(chk(P+id)){crit+=c;dmg+=d;}});
+  DEF_CHIPS.forEach(([id,dg,rd])=>{if(chk(P+id)){dodge+=dg;reduc+=rd;}});
+  if(chk(P+'myFire')){crit+=10;dmg+=20;}
+  if(chk(P+'myFood'))crit+=10;
+  if(chk(P+'myBuffEn'))crit+=fv(P+'myBuff');
+  if(chk(P+'myOtherEn'))crit+=fv(P+'myOther');
+  if(chk(P+'myDmgEn'))dmg+=fv(P+'myDmg');
+  if(chk(P+'eIce'))crit-=30;
+  if(chk(P+'eFood'))dodge+=10;
+  if(chk(P+'eBuffEn'))dodge+=fv(P+'eBuff');
+  if(chk(P+'eOtherEn'))dodge+=fv(P+'eOther');
+  if(chk(P+'eReducEn'))reduc+=fv(P+'eReducExtra');
+  const wv=$(P+'weapon').value.split(',');
+  crit+=parseFloat(wv[0])||0;dmg+=parseFloat(wv[1])||0;
+  if(hasWeaponMastery(pfx))crit+=6;
+  crit+=fv(P+'subCrit')/4;
+  if(chk(P+'consEn'))crit+=fv(P+'consVal');
+  let mC=0,mD=0,mDg=0,mR=0;
+  ['A','B','C','D'].forEach(s=>{const t=$(`${P}m${s}t`).value,v=fv(`${P}m${s}v`);if(t==='crit')mC+=v;else if(t==='dmg')mD+=v;else if(t==='dodge')mDg+=v;else if(t==='reduc')mR+=v;});
+  // 盾牌展开第二条
+  if(chk(P+'mD_shieldExpand')){const st=$(P+'shield_r2t')?.value,sv=fv(P+'shield_r2v');if(st==='dodge')mDg+=sv;else if(st==='reduc')mR+=sv;else if(st==='dmg')mD+=sv;}
+  return{totalCrit:crit+mC,totalDmg:dmg+mD,totalDodge:dodge+mDg,totalReduc:reduc+mR};
+}
+
+function calc134ForModel(pfx){
+  const P=`d${pfx}_`,weapCat=$(P+'weapCat')?.value||'other',shExp=chk(P+'mD_shieldExpand');
+  const acc={atk1:0,armor1:0,bonus3:0,expl3:0,pdef3:0,spd4:0,bonus4:0,ldef4:0};
+  ['A','B','C','D'].forEach(s=>['r1','r3','r4'].forEach(row=>{
+    const tid=`${P}m${s}134_${row}t`,vid=`${P}m${s}134_${row}v`;
+    if(!$(tid))return;const typ=$(tid).value,val=parseFloat($(vid).value)||0;
+    if(typ&&val>0&&acc[typ]!==undefined)acc[typ]+=val;
+  }));
+  if(shExp){acc.armor1+=10;['r3','r4'].forEach(row=>{const tid=`${P}shield134_${row}t`,vid=`${P}shield134_${row}v`;if(!$(tid))return;const typ=$(tid).value,val=parseFloat($(vid).value)||0;if(typ&&val>0&&acc[typ]!==undefined)acc[typ]+=val;});}
+  // 使用统一权重函数计算各属性贡献
+  const atkTotal=acc.atk1*get134Weight('atk1',weapCat)+acc.bonus3*get134Weight('bonus3',weapCat)+acc.expl3*get134Weight('expl3',weapCat)+acc.spd4*get134Weight('spd4',weapCat)+acc.bonus4*get134Weight('bonus4',weapCat);
+  const defTotal=acc.armor1*get134Weight('armor1',weapCat)+acc.pdef3*get134Weight('pdef3',weapCat)+acc.ldef4*get134Weight('ldef4',weapCat);
+  return{total134:atkTotal+defTotal,atkTotal,defTotal,rawAtk:acc.atk1,rawArmor:acc.armor1,rawBonus3:acc.bonus3,rawExpl3:acc.expl3,rawPDef3:acc.pdef3,rawSpd4:acc.spd4,rawBonus4:acc.bonus4,rawLDef4:acc.ldef4};
+}
+
+function compute134Delta(weapCat,typ,val){
+  if(!typ||val<=0)return{atk:0,def:0};
+  const w=get134Weight(typ,weapCat);
+  const isAtk=['atk1','bonus3','expl3','spd4','bonus4'].includes(typ);
+  return isAtk?{atk:val*w,def:0}:{atk:0,def:val*w};
+}
+
+/* §4 主计算 */
+function _dualCalcCore(){
+  const A=getModelStats('A');
+
+  // PartA：模型A vs 三种快捷预设（共6个系数 + 详情数据）
+  PRESET_LIST.forEach(p=>{
+    const B=getPresetStats(p.key);
+    const ncAtk=Math.max(0,A.totalCrit-B.totalDodge), ncDef=Math.max(0,B.totalCrit-A.totalDodge);
+    const cAtk=calcCoeff(ncAtk,A.totalDmg,Math.max(0,B.totalReduc));
+    const cDef=calcCoeff(ncDef,B.totalDmg,Math.max(0,A.totalReduc));
+    updEl(`dCoeff_${p.key}_atk`, `${(cAtk*100).toFixed(2)}%`);
+    updEl(`dCoeff_${p.key}_def`, `${(cDef*100).toFixed(2)}%`);
+
+    const pAtk=A.totalDmg-B.totalReduc, pDef=B.totalDmg-A.totalReduc;
+    updEl(`d_${p.key}_critTotal`,B.totalCrit.toFixed(1));
+    updEl(`d_${p.key}_dmgTotal`,B.totalDmg.toFixed(1));
+    updEl(`d_${p.key}_dodgeTotal`,B.totalDodge.toFixed(1));
+    updEl(`d_${p.key}_reducTotal`,B.totalReduc.toFixed(1));
+    updEl(`d_${p.key}_ncAtk`,ncAtk.toFixed(1));
+    updEl(`d_${p.key}_adAtk`,Math.max(25,50+pAtk).toFixed(1));
+    updEl(`d_${p.key}_ncDef`,ncDef.toFixed(1));
+    updEl(`d_${p.key}_adDef`,Math.max(25,50+pDef).toFixed(1));
+  });
+
+  updEl('dA_sTotalCrit',A.totalCrit.toFixed(1));updEl('dA_sTotalDmg',A.totalDmg.toFixed(1));updEl('dA_sTotalDodge',A.totalDodge.toFixed(1));updEl('dA_sTotalReduc',A.totalReduc.toFixed(1));
+
+  // PartB：第一三四条改造系数（仅模型A，与受击模型无关）
+  const r134A=calc134ForModel('A');
+  upd134Display('A',r134A);
+  const note=$('shieldExpandNote');if(note)note.style.display=chk('dA_mD_shieldExpand')?'block':'none';
+}
+/* 防抖版：供所有 onchange/oninput 使用，80ms 内多次触发只执行一次 */
+const dualCalc=debounce(_dualCalcCore,80);
+/* 立即版：供初始化、保存前等需要同步结果的场景 */
+const dualCalcNow=_dualCalcCore;
+
+/* §5 一三四系数与评分 */
+/* ── 评分满分上限（输出流51，减免流52.5，混合流动态） ── */
+const SCORE_MAX={out:51,def:52.5};
+/* 原始系数（0~1浮点）× 100 = 评分分值，集中转换避免散落多处 */
+const toScore=v=>v*100;
+
+function upd134Display(pfx,r){
+  const u=(k,v,d)=>updEl(`s134_${pfx}_${k}`,v.toFixed(d));
+  u('total',r.total134,4);u('atk',r.atkTotal,4);u('def',r.defTotal,4);
+  u('rawAtk',r.rawAtk,1);u('rawArmor',r.rawArmor,1);u('rawBonus3',r.rawBonus3,1);u('rawExpl3',r.rawExpl3,1);
+  u('rawPDef3',r.rawPDef3,1);u('rawSpd4',r.rawSpd4,1);u('rawBonus4',r.rawBonus4,1);u('rawLDef4',r.rawLDef4,1);
+  upd134Score(pfx,r);
+}
+
+function getMixedMax(pfx){
+  const P=`d${pfx}_`;let big=0,small=0;
+  ['A','B'].forEach(s=>{if($(`${P}m${s}134_r4t`)?.value==='ldef4')big++;});
+  ['C','D'].forEach(s=>{if($(`${P}m${s}134_r4t`)?.value==='ldef4')small++;});
+  if(chk(P+'mD_shieldExpand')&&$(`${P}shield134_r4t`)?.value==='ldef4')big++;
+  return 66+big*2.5+small*1.25;
+}
+
+function getScoreLevel(score,max){
+  if(score>=max)return{level:'max',label:'满分！'};
+  if(score>=max*0.8)return{level:'great',label:'优秀'};
+  if(score>=max*0.7)return{level:'good',label:'良好'};
+  if(score>=max*0.6)return{level:'pass',label:'及格'};
+  return{level:'below',label:'不及格'};
+}
+
+function upd134Score(pfx,r){
+  const atk=r.atkTotal,def=r.defTotal;
+  // 更新单行评分（suffix: out / def / mix）
+  const updRow=(suffix,scoreVal,max,hasData)=>{
+    const badgeEl=$(`s134_${pfx}_${suffix}Badge`),nextEl=$(`s134_${pfx}_${suffix}Next`),barEl=$(`s134_${pfx}_${suffix}Bar`);
+    if(!badgeEl)return;
+    if(!hasData){
+      badgeEl.textContent='未配置';badgeEl.className='s134-score-badge s134-score-na';
+      if(nextEl)nextEl.textContent='';
+      if(barEl){barEl.style.width='0';barEl.style.background='#ccc';}
+      return;
+    }
+    const{level,label}=getScoreLevel(scoreVal,max);
+    badgeEl.textContent=`${label}（${scoreVal.toFixed(2)} / 满分${max}）`;
+    badgeEl.className=`s134-score-badge s134-score-${level}`;
+    const pass=+(max*0.6).toFixed(2),good=+(max*0.7).toFixed(2),great=+(max*0.8).toFixed(2);
+    if(nextEl)nextEl.textContent=level==='below'?`→ 及格线 ${pass}，差 ${(pass-scoreVal).toFixed(2)}`:level==='pass'?`→ 良好线 ${good}，差 ${(good-scoreVal).toFixed(2)}`:level==='good'?`→ 优秀线 ${great}，差 ${(great-scoreVal).toFixed(2)}`:level==='great'?`→ 满分线 ${max}，差 ${(max-scoreVal).toFixed(2)}`:'已达满分线 🎉';
+    if(barEl){barEl.style.width=Math.min(100,scoreVal/max*100).toFixed(1)+'%';barEl.style.background=getScoreColor(level);}
+  };
+  updRow('out',toScore(atk),SCORE_MAX.out,atk>0.0001);
+  updRow('def',toScore(def),SCORE_MAX.def,def>0.0001);
+  updRow('mix',toScore(atk+def),getMixedMax(pfx),atk>0.0001&&def>0.0001);
+}
+
+function getScoreBadgeText(atkTotal,defTotal,pfxForMix){
+  const hasAtk=atkTotal>0.0001,hasDef=defTotal>0.0001;
+  if(!hasAtk&&!hasDef)return{out:'-',def:'-',mix:'-'};
+  const lv=(s,m)=>getScoreLevel(s,m).label;
+  return{
+    out:hasAtk?lv(toScore(atkTotal),SCORE_MAX.out):'-',
+    def:hasDef?lv(toScore(defTotal),SCORE_MAX.def):'-',
+    mix:(hasAtk&&hasDef)?lv(toScore(atkTotal+defTotal),getMixedMax(pfxForMix)):'-'
+  };
+}
+
+/* §6 UI交互控制 */
+function toggleSec(id){
+  const b=$(id),h=b.previousElementSibling;
+  b.classList.toggle('hidden');h.classList.toggle('collapsed');
+  const st=JSON.parse(lsGet('colSt','{}'));
+  const _h=b.classList.contains('hidden');if(_h)st[id]=true;else delete st[id];
+  lsSet('colSt',JSON.stringify(st));
+}
+function togglePanel(id){const p=$(id);const opening=p.style.display!=='block';p.style.display=opening?'block':'none';if(opening&&id==='dualCmpPanel')updCmpWeapCatHint();}
+function toggleDetailTable(){const w=$('detailTableWrapper'),btn=$('toggleDetailBtn'),h=w.style.display==='none';w.style.display=h?'block':'none';btn.textContent=h?'📋 隐藏PartA详情':'📋 显示PartA详情';}
+function toggle134Detail(){const w=$('s134DetailWrapper'),btn=$('toggle134Btn'),h=w.style.display==='none';w.style.display=h?'block':'none';btn.textContent=h?'📋 隐藏PartB详情':'📋 显示PartB详情';}
+function switchDualTab(id,btn){const p=btn.closest('.dual-rec');p.querySelectorAll('.tab-body').forEach(t=>t.classList.remove('active'));p.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));$(id).classList.add('active');btn.classList.add('active');}
+function switchMobTab(idx,btn){
+  if(window.innerWidth>=900)return;
+  document.querySelectorAll('.mob-tab').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  [$('colA'),$('colB'),$('colFn')].forEach((el,i)=>el&&el.classList.toggle('mob-hide',i!==idx));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* §7 改造控制 */
+function setModLim(pfx,slot){
+  const P=pfx?`d${pfx}_`:'',lim=MOD_LIM[(slot==='A'||slot==='B')?'big':'small'];
+  const t=$(`${P}m${slot}t`).value,max=lim[t]||lim.crit,inp=$(`${P}m${slot}v`);
+  inp.max=max;
+  if(parseFloat(inp.value)>max){ 
+    inp.value=max; 
+    showToast(`已重置为当前属性最大值 ${max}`,'warn',2000); 
+  }
+  const unitMap={crit:'暴击',dodge:'免暴',dmg:'%暴伤',reduc:'%暴减'};
+  $(`${P}m${slot}x`).textContent=`(≤${max}${unitMap[t]})`;
+}
+function onModChg(pfx,slot){
+  const P=pfx?`d${pfx}_`:'';
+  const inp=$(`${P}m${slot}v`),max=parseFloat(inp.max);
+  inp.value=clampInput(inp,max).toFixed(1);
+  dualCalcNow();
+}
+function onMod134RowChg(pfx,slot,row){
+  const P=pfx?`d${pfx}_`:'',val=$(`${P}m${slot}134_${row}t`).value,maxV=get134RowMax(slot,row,val);
+  const inp=$(`${P}m${slot}134_${row}v`),lbl=$(`${P}m${slot}134_${row}x`);
+  if(!val||!maxV){inp.disabled=true;inp.value=0;if(lbl)lbl.textContent='';}
+  else{inp.disabled=false;inp.max=maxV;if(lbl)lbl.textContent=`≤${maxV}`;inp.value=clampInput(inp,maxV);}
+  dualCalcNow();
+}
+function onShieldExpandChg(pfx){
+  const P=pfx?`d${pfx}_`:'',expanded=chk(P+'mD_shieldExpand'),rowsDiv=$(P+'mD134_shieldRows');
+  if(rowsDiv){rowsDiv.style.opacity=expanded?'1':'.4';rowsDiv.style.pointerEvents=expanded?'':'none';
+    if(!expanded){['r3','r4'].forEach(row=>{const tid=`${P}shield134_${row}t`,vid=`${P}shield134_${row}v`,xid=`${P}shield134_${row}x`;if($(tid))$(tid).value='';if($(vid)){$(vid).value=0;$(vid).disabled=true;}if($(xid))$(xid).textContent='';});
+      const r2t=$(P+'shield_r2t'),r2v=$(P+'shield_r2v');if(r2t)r2t.value='';if(r2v){r2v.value=0;r2v.disabled=true;}
+    }
+  }
+  dualCalcNow();
+}
+function toggleInput(iid,cid,dv){const en=chk(cid),el=$(iid);el.disabled=!en;if(!en)el.value=dv;dualCalcNow();}
+function toggleConsumable(vid,eid){const en=chk(eid);$(vid).disabled=!en;if(!en)$(vid).value=0;dualCalcNow();}
+function checkChipLimit(slot,pfx,_,e){
+  e=e||window.event;const P=pfx?`d${pfx}_`:'';
+  const ac=ATK_CHIPS.filter(c=>chk(P+c[0])).length,dc=DEF_CHIPS.filter(c=>chk(P+c[0])).length;
+  if(slot==='atk'&&ac>3){showToast(`模型${pfx}攻击芯片最多选3张！`,'warn');e.target.checked=false;return;}
+  if(slot==='def'&&dc>3){showToast(`模型${pfx}防御芯片最多选3张！`,'warn');e.target.checked=false;return;}
+  dualCalcNow();
+}
+
+/* §8 种族切换 */
+function applyRaceDisplay(pfx,rSel,wSel,hC,hhC){
+  const rt=$(rSel).value.split(',')[1]||$(rSel).value,isH=rt==='human';
+  hC.forEach(cls=>document.querySelectorAll('.'+cls).forEach(o=>o.style.display=isH?'':'none'));
+  hhC.forEach(cls=>document.querySelectorAll('.'+cls).forEach(o=>o.style.display=isH?'none':''));
+  document.querySelectorAll(`.d${pfx}-halfhuman`).forEach(o=>o.textContent=`步枪(${rt==='mechbone'?'械骨人':'半人'}):+6暴击,+16%暴伤`);
+  const ws=$(wSel);if(ws.options[ws.selectedIndex].style.display==='none')ws.value='0,0';
+  updWeaponMastery(pfx);
+}
+function onRaceChange(pfx,rSel,wSel,hC,hhC){
+  applyRaceDisplay(pfx,rSel,wSel,hC,hhC);
+  dualCalcNow();
+}
+
+/* 武器精通：仅人类种族使用枪械时额外增加6暴击 */
+function isHumanRace(pfx){
+  const re=$(`d${pfx}_race`);if(!re)return false;
+  const rt=re.value.split(',')[1]||re.value;
+  return rt==='human';
+}
+function hasWeaponMastery(pfx){
+  const we=$(`d${pfx}_weapon`);if(!we)return false;
+  if(!isHumanRace(pfx))return false;
+  const txt=we.options[we.selectedIndex]?.text||'';
+  if(we.value==='0,0')return false; // 无武器不享受
+  return /(步枪|霰弹|喷火|手枪|狙|炮)/.test(txt); // 弓箭、刀等非枪械不享受
+}
+function updWeaponMastery(pfx){
+  const hint=$(`d${pfx}_weapMastery`);
+  if(hint)hint.style.display=hasWeaponMastery(pfx)?'':'none';
+}
+
+/* §9 面板动态构建 */
+function buildDualCommonPanel(pfx){
+  const P=`d${pfx}_`;
+  const aCh=ATK_CHIPS.map(([id,,,l])=>`<div class="cb-item"><input type="checkbox" id="${P}${id}" onchange="checkChipLimit('atk','${pfx}','',event)"><label for="${P}${id}">${ATK_CHIP_NAMES[id]}(${l})</label></div>`).join('');
+  const dCh=DEF_CHIPS.map(([id,,,l])=>`<div class="cb-item"><input type="checkbox" id="${P}${id}" onchange="checkChipLimit('def','${pfx}','',event)"><label for="${P}${id}">${DEF_CHIP_NAMES[id]}(${l})</label></div>`).join('');
+  $(`dualCommon_${pfx}`).innerHTML=`
+    <div class="sub">一、种族预设</div>
+    <div class="row"><div class="lbl">种族：</div>
+      <select id="${P}race" onchange="onRaceChange('${pfx}','${P}race','${P}weapon',['d${pfx}-human'],['d${pfx}-halfhuman'])">
+        <option value="186.8,human">A人类：186.8暴击+21%暴伤+186免暴+16%暴减</option>
+        <option value="186.8,halfhuman">B半人：186.8暴击+21%暴伤+186免暴+0%暴减</option>
+        <option value="192.8,mechbone">C械骨人：192.8暴击+21%暴伤+186免暴+16%暴减（“过载增幅”节点提供6暴击）</option>
+      </select></div>
+    <div class="sub">二、芯片（仅需选择与暴击暴伤有关的，搭配里与暴击暴伤无关的不用选。攻击最多选3张，防御最多选3张）</div>
+    <div style="font-size:.75rem;color:var(--text2);margin:3px 0">攻击芯片：</div><div class="cb-grid">${aCh}</div>
+    <div style="font-size:.75rem;color:var(--text2);margin:5px 0 3px">防御芯片：</div><div class="cb-grid">${dCh}</div>
+    <div class="sub">三、模型${pfx}增益与修正</div>
+    <div style="font-size:.75rem;color:var(--text2);margin:3px 0">攻击增益：</div>
+    <div class="cb-grid">
+      <div class="cb-item"><input type="checkbox" id="${P}myFire" onchange="dualCalc()"><label for="${P}myFire">5星火核心(+10暴击,+20%暴伤)</label></div>
+      <div class="cb-item"><input type="checkbox" id="${P}myFood" onchange="dualCalc()"><label for="${P}myFood">暴击料理(+10暴击)</label></div>
+    </div>
+    <div class="row"><div class="lbl">料理暴击赐福：</div><input type="checkbox" id="${P}myBuffEn" onchange="toggleInput('${P}myBuff','${P}myBuffEn',6)"><input type="number" inputmode="decimal" id="${P}myBuff" value="6" min="0" max="50" step="0.1" oninput="dualCalc()" disabled></div>
+    <div class="row"><div class="lbl">其他暴击增益：</div><input type="checkbox" id="${P}myOtherEn" onchange="toggleInput('${P}myOther','${P}myOtherEn',0)"><input type="number" inputmode="decimal" id="${P}myOther" value="0" min="0" max="100" step="0.1" oninput="dualCalc()" disabled></div>
+    <div class="row"><div class="lbl">其他暴伤增益：</div><input type="checkbox" id="${P}myDmgEn" onchange="toggleInput('${P}myDmg','${P}myDmgEn',0)"><input type="number" inputmode="decimal" id="${P}myDmg" value="0" min="0" max="200" step="0.1" oninput="dualCalc()" disabled>%</div>
+    <div style="font-size:.75rem;color:var(--text2);margin:5px 0 3px">受击参数：</div>
+    <div class="cb-grid">
+      <div class="cb-item"><input type="checkbox" id="${P}eIce" onchange="dualCalc()"><label for="${P}eIce">受到5星冰核心(-30我方暴击)</label></div>
+      <div class="cb-item"><input type="checkbox" id="${P}eFood" onchange="dualCalc()"><label for="${P}eFood">免暴料理(+10免暴)</label></div>
+    </div>
+    <div class="row"><div class="lbl">料理免暴赐福：</div><input type="checkbox" id="${P}eBuffEn" onchange="toggleInput('${P}eBuff','${P}eBuffEn',6)"><input type="number" inputmode="decimal" id="${P}eBuff" value="6" min="0" max="50" step="0.1" oninput="dualCalc()" disabled></div>
+    <div class="row"><div class="lbl">其他免暴增益：</div><input type="checkbox" id="${P}eOtherEn" onchange="toggleInput('${P}eOther','${P}eOtherEn',0)"><input type="number" inputmode="decimal" id="${P}eOther" value="0" min="0" max="100" step="0.1" oninput="dualCalc()" disabled></div>
+    <div class="row"><div class="lbl">其他暴减增幅：</div><input type="checkbox" id="${P}eReducEn" onchange="toggleInput('${P}eReducExtra','${P}eReducEn',0)"><input type="number" inputmode="decimal" id="${P}eReducExtra" value="0" min="0" max="100" step="0.1" oninput="dualCalc()" disabled>%</div>`;
+}
+
+function buildDualAtkPanel(pfx){
+  const P=`d${pfx}_`,wH=WEAPON_OPTIONS.replace(/PFXR/g,`d${pfx}`);
+  $(`dualAtk_${pfx}`).innerHTML=`
+    <div class="sub">四、武器及专研</div>
+    <div class="row"><div class="lbl">武器类型：</div><select id="${P}weapon" onchange="updWeaponMastery('${pfx}');dualCalc()">${wH}</select></div>
+    <div class="row"><div class="lbl">武器增伤计算公式：</div>
+      <select id="${P}weapCat" onchange="dualCalc()" style="max-width:130px">
+        <option value="other">其他枪械</option><option value="duelball">决斗电球</option><option value="grenade">榴弹炮</option>
+      </select></div>
+    <div id="${P}weapMastery" style="display:none;font-size:.78rem;color:var(--green);margin:2px 0 4px">根据"武器精通"潜能，人类种族使用枪械时会增加6暴击</div>
+    <div class="sub">五、副武暴击</div>
+    <div class="row"><div class="lbl">副武第二条暴击值：</div><input type="number" inputmode="decimal" id="${P}subCrit" value="0" min="0" max="15" step="0.1" oninput="dualCalc()"><span class="hint">×1/4计入</span></div>
+    <div class="sub">六、暴击耗材</div>
+    <div class="cb-item"><input type="checkbox" id="${P}consEn" onchange="toggleConsumable('${P}consVal','${P}consEn')"><label for="${P}consEn">装备暴击耗材</label></div>
+    <div class="row"><div class="lbl">耗材数值：</div><input type="number" inputmode="decimal" id="${P}consVal" value="6" min="4.5" max="15" step="0.1" oninput="dualCalc()" disabled><span class="hint">4.5~15</span></div>`;
+}
+
+function buildModPanel(cid,pfx){
+  const slots=[['C','小件A 帽子','small'],['A','大件A 护甲','big'],['B','大件B 武器','big'],['D','小件B 护盾','small']];
+  const P=pfx?`d${pfx}_`:'',r1D={A:'armor1',B:'atk1',C:'bonus3'};
+  const mk134=(s,row,rl,dv='',ck=null)=>{
+    const cfg=ck||s,opts=MOD134_CFG[cfg][row];
+    // 第一条：若无"无"选项，则强制选中第一项
+    const effectiveDv=(row==='r1'&&!dv&&opts&&opts.length>0)?opts[0][0]:dv;
+    const sO=opts.map(([v,t])=>`<option value="${v}"${v===effectiveDv?' selected':''}>${t||'无'}</option>`).join('');
+    const mV=effectiveDv?get134RowMax(cfg,row,effectiveDv):0,dis=!effectiveDv||!mV;
+    const ip=ck==='SHIELD'?`${P}shield134_${row}`:`${P}m${s}134_${row}`;
+    const oc=ck==='SHIELD'?`onShieldRow134Chg('${pfx}','${row}')`:`onMod134RowChg('${pfx}','${s}','${row}')`;
+    return`<div class="mod134-row"><span class="mod134-lbl">${rl}：</span>
+      <select id="${ip}t" class="mod134-sel" onchange="${oc}"${row==='r1'&&opts.length===1?' disabled':''}>${sO}</select>
+      <input type="number" inputmode="decimal" id="${ip}v" class="mod134-inp" value="0" min="0" ${mV>0?`max="${mV}"`:''}  step="0.1" ${dis?'disabled':''} onchange="${oc}">
+      <span class="mod134-max" id="${ip}x">${mV>0?`≤${mV}`:''}</span></div>`;
+  };
+  const mkRow2=(s,sz)=>{
+    const lim=MOD_LIM[sz];
+    return`<div class="mod134-row"><span class="mod134-lbl">第二条：</span>
+      <select id="${P}m${s}t" class="mod134-sel" onchange="setModLim('${pfx}','${s}');dualCalc()">
+        <option value="crit">暴击</option><option value="dodge">免暴</option><option value="dmg">暴伤</option><option value="reduc">暴减</option>
+      </select>
+      <input type="number" inputmode="decimal" id="${P}m${s}v" class="mod134-inp" value="0" min="0" max="${lim.crit}" step="0.1" onchange="onModChg('${pfx}','${s}')">
+      <span class="mod134-max" id="${P}m${s}x">(≤${lim.crit}暴击)</span></div>`;
+  };
+  $(cid).innerHTML=slots.map(([s,label,sz])=>{
+    const note=s==='D'?`<div class="note" style="margin-bottom:4px;color:var(--warn-brown)">⚠️ 护盾第一条暂不计入评分</div>`:'';
+    const rows=s==='D'
+      ?`${mkRow2(s,sz)}${mk134(s,'r3','第三条')}${mk134(s,'r4','第四条')}`
+      :`${mk134(s,'r1','第一条',r1D[s]||'')}${mkRow2(s,sz)}${mk134(s,'r3','第三条')}${mk134(s,'r4','第四条')}`;
+    return`<div class="mod134-section"><div class="mod134-hd">改造参数（${label}）</div>${note}${rows}</div>`;
+  }).join('')+`
+  <div class="mod134-section" style="margin-top:6px;border-color:var(--s134-border)">
+    <div class="mod134-hd" style="display:flex;align-items:center;gap:6px">
+      <input type="checkbox" id="${P}mD_shieldExpand" style="accent-color:var(--accent);width:14px;height:14px;cursor:pointer" onchange="onShieldExpandChg('${pfx}')">
+      <label for="${P}mD_shieldExpand" style="cursor:pointer;color:var(--warn-brown);font-size:.78rem;font-weight:700">🛡 盾牌展开（勾选后：护甲+10，二三四条生效）</label>
+    </div>
+    <div id="${P}mD134_shieldRows" style="opacity:.4;pointer-events:none">
+      <div class="mod134-row"><span class="mod134-lbl">盾牌第二条：</span>
+        <select id="${P}shield_r2t" class="mod134-sel" onchange="onShieldR2Chg('${pfx}')">
+          <option value="">无</option><option value="dodge">免暴（上限15）</option><option value="reduc">暴减（上限25%）</option><option value="dmg">暴伤（上限25%）</option>
+        </select>
+        <input type="number" inputmode="decimal" id="${P}shield_r2v" class="mod134-inp" value="0" min="0" step="0.1" disabled onchange="onShieldR2Chg('${pfx}')">
+        <span class="mod134-max" id="${P}shield_r2x"></span></div>
+      ${mk134('D','r3','盾牌第三条','','SHIELD')}${mk134('D','r4','盾牌第四条','','SHIELD')}
+    </div>
+  </div>`;
+  buildCmp134Plans();
+}
+
+function buildCmp134Plans(){
+  if(!$('cmp134Plans'))return;
+  const part=$('dCmpPart').value;
+  const R1_OPTS={A:[['armor1','护甲']],B:[['atk1','攻击']],C:[['bonus3','加成']],D:[['','无']]};
+  const R3_OPTS=[['','无'],['bonus3','加成'],['expl3','爆炸'],['pdef3','玩家减免']];
+  const R4_OPTS=[['','无'],['spd4','射速'],['bonus4','加成'],['ldef4','轻型减免']];
+  const BIG_LIM=MOD_LIM.big,SML_LIM=MOD_LIM.small;
+
+  const mk=(p,label)=>{
+    if(!part)return`<div style="font-size:.76rem;color:var(--text2);padding:4px 0">${label}：请先选择比较部位</div>`;
+    const isBig=(part==='A'||part==='B'),lim=isBig?BIG_LIM:SML_LIM;
+    const r1opts=(R1_OPTS[part]||[['','无']]).map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
+    const r3opts=R3_OPTS.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
+    const r4opts=R4_OPTS.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
+    const hasR1=part!=='D';
+    let rows='';
+    if(hasR1)rows+=`<div class="mod134-row"><span class="mod134-lbl">第一条：</span>
+      <select id="${p}_r1t" class="mod134-sel" onchange="updDualCmpRow('${p}','r1')"${(R1_OPTS[part]||[]).length===1?' disabled':''}>${r1opts}</select>
+      <input type="number" inputmode="decimal" id="${p}_r1v" class="mod134-inp" value="0" min="0" step="0.1" disabled onchange="updDualCmpRow('${p}','r1')">
+      <span class="mod134-max" id="${p}_r1x"></span></div>`;
+    rows+=`<div class="mod134-row"><span class="mod134-lbl">第二条：</span>
+      <select id="${p}_r2t" class="mod134-sel" onchange="updDualCmpRow2('${p}')">
+        <option value="">无</option><option value="crit">暴击</option><option value="dmg">暴伤</option><option value="dodge">免暴</option><option value="reduc">暴减</option>
+      </select>
+      <input type="number" inputmode="decimal" id="${p}_r2v" class="mod134-inp" value="0" min="0" step="0.1" disabled onchange="updDualCmpRow2('${p}')">
+      <span class="mod134-max" id="${p}_r2x">(≤${lim.crit}暴击/${lim.dmg}%暴伤)</span></div>`;
+    rows+=`<div class="mod134-row"><span class="mod134-lbl">第三条：</span>
+      <select id="${p}_r3t" class="mod134-sel" onchange="updDualCmpRow('${p}','r3')">${r3opts}</select>
+      <input type="number" inputmode="decimal" id="${p}_r3v" class="mod134-inp" value="0" min="0" step="0.1" disabled onchange="updDualCmpRow('${p}','r3')">
+      <span class="mod134-max" id="${p}_r3x"></span></div>`;
+    rows+=`<div class="mod134-row"><span class="mod134-lbl">第四条：</span>
+      <select id="${p}_r4t" class="mod134-sel" onchange="updDualCmpRow('${p}','r4')">${r4opts}</select>
+      <input type="number" inputmode="decimal" id="${p}_r4v" class="mod134-inp" value="0" min="0" step="0.1" disabled onchange="updDualCmpRow('${p}','r4')">
+      <span class="mod134-max" id="${p}_r4x"></span></div>`;
+    return`<div style="font-size:.76rem;font-weight:700;color:var(--green);margin:6px 0 3px">${label}：</div><div class="mod134-section" style="margin:0 0 6px">${rows}</div>`;
+  };
+  $('cmp134Plans').innerHTML=mk('dc1','改造方案1')+mk('dc2','改造方案2');
+  // 自动触发r1行初始化（无"无"选项时自动启用输入框）
+  if(part&&part!=='D'){['dc1','dc2'].forEach(p=>{updDualCmpRow(p,'r1');});}
+}
+
+function updDualCmpRow(p,row){
+  const part=$('dCmpPart').value,val=$(`${p}_${row}t`)?.value||'',inp=$(`${p}_${row}v`),lbl=$(`${p}_${row}x`);
+  if(!inp)return;
+  if(!part){inp.disabled=true;inp.value=0;if(lbl)lbl.textContent='';return;}
+  const fo=MOD134_CFG[part]?.[row]?.find(o=>o[0]===(val||'')),mV=fo?fo[2]:0;
+  if(!val||!mV){inp.disabled=true;inp.value=0;if(lbl)lbl.textContent='';}
+  else{inp.disabled=false;inp.max=mV;if(lbl)lbl.textContent=`≤${mV}`;clampInput(inp,mV);}
+}
+
+function updDualCmpRow2(p){
+  const part=$('dCmpPart').value,val=$(`${p}_r2t`)?.value||'',inp=$(`${p}_r2v`),lbl=$(`${p}_r2x`);
+  if(!inp)return;
+  const isBig=(part==='A'||part==='B'),lim=isBig?MOD_LIM.big:MOD_LIM.small;
+  const maxV=val==='crit'?lim.crit:val==='dmg'?lim.dmg:val==='dodge'?lim.dodge:val==='reduc'?lim.reduc:0;
+  if(!val){inp.disabled=true;inp.value=0;if(lbl)lbl.textContent=`(≤${lim.crit}暴击/${lim.dmg}%暴伤)`;return;}
+  inp.disabled=false;inp.max=maxV;if(lbl)lbl.textContent=`≤${maxV}`;
+  clampInput(inp,maxV);
+}
+
+/* §10 预设 */
+const PRESET_LIST=[
+  {key:'human_fragile', name:'预设A · 人类脆皮', desc:'人类种族 · 步枪 · 好事+爆裂+坚韧+磐石+以攻<br>暴击料理 · 副武12 · 耗材6 · 全暴击改造'},
+  {key:'halfhuman_dodge', name:'预设B · 半人免暴武士', desc:'半人种族 · 刀 · 坚韧+重甲<br>免暴料理+赐福6 · 副武12 · 耗材6 · 全免暴改造'},
+  {key:'human_firefly', name:'预设C · 械骨人暴减萤火', desc:'械骨人种族 · 喷火器 · 爆裂+好事+坚韧+磐石+以攻<br>暴击料理+免暴料理 · 五星火核心 · 副武12 · 耗材6 · 全暴减改造'}
+];
+
+function buildPresetPanel(pfx){
+  const holder=$(`presetHolder_${pfx}`);
+  if(!holder)return;
+  const btns=PRESET_LIST.map(p=>`
+    <button class="preset-btn" onclick="applyPreset('${pfx}','${p.key}')">
+      <span class="preset-btn-name">${p.name}</span>
+      <span class="preset-btn-desc">${p.desc}</span>
+    </button>`).join('');
+  holder.innerHTML=`
+    <div class="preset-panel" id="presetPanel_${pfx}" style="display:none">
+      <div class="preset-title">⚡ 选择预设方案（点击立即应用）</div>
+      <div class="preset-panel-inner">${btns}</div>
+    </div>`;
+}
+
+function togglePresetPanel(pfx){togglePanel(`presetPanel_${pfx}`);}
+
+function applyPresetCore(pfx,type){
+  const P=`d${pfx}_`;
+  [...ATK_CHIPS.map(c=>c[0]),...DEF_CHIPS.map(c=>c[0])].forEach(id=>{const el=$(P+id);if(el)el.checked=false;});
+  [P+'myFire',P+'myFood',P+'myBuffEn',P+'myOtherEn',P+'myDmgEn',P+'eIce',P+'eFood',P+'eBuffEn',P+'eOtherEn',P+'eReducEn'].forEach(id=>{const el=$(id);if(el)el.checked=false;});
+  [P+'myBuff',P+'myOther',P+'myDmg',P+'eBuff',P+'eOther',P+'eReducExtra'].forEach(id=>{const el=$(id);if(el){el.disabled=true;el.value=0;}});
+  /* 注意：种族切换使用 applyRaceDisplay（无 dualCalcNow），避免在 _dualCalcCore→getPresetStats 内部调用时递归触发重算 */
+  const setRace=(v)=>{const re=$(P+'race');if(re){re.value=v;applyRaceDisplay(pfx,P+'race',P+'weapon',[`d${pfx}-human`],[`d${pfx}-halfhuman`]);}};
+  const setCons=()=>{const sub=$(P+'subCrit');if(sub)sub.value=12;const ce=$(P+'consEn');if(ce){ce.checked=true;const cv=$(P+'consVal');if(cv){cv.disabled=false;cv.value=6;}}};
+  const setSlots=t=>[['A','big'],['B','big'],['C','small'],['D','small']].forEach(([s,sz])=>{const ti=$(`${P}m${s}t`),inp=$(`${P}m${s}v`);if(ti)ti.value=t;if(inp)inp.value=MOD_LIM[sz][t];setModLim(pfx,s);});
+  if(type==='human_fragile'){
+    setRace('192.8,mechbone');
+    [P+'cHS',P+'cBL',P+'eJR',P+'ePS',P+'eYG',P+'myFood'].forEach(id=>{const el=$(id);if(el)el.checked=true;});
+    const wep=$(P+'weapon');if(wep)wep.value='12,16';
+    setCons();setSlots('crit');
+  }else if(type==='halfhuman_dodge'){
+    setRace('186.8,halfhuman');
+    [P+'eJR',P+'eCJ',P+'eFood'].forEach(id=>{const el=$(id);if(el)el.checked=true;});
+    const ebe=$(P+'eBuffEn');if(ebe){ebe.checked=true;const eb=$(P+'eBuff');if(eb){eb.disabled=false;eb.value=6;}}
+    const wep=$(P+'weapon');if(wep)wep.value='26,0';
+    setCons();setSlots('dodge');
+  }else if(type==='human_firefly'){
+    setRace('186.8,human');
+    // 芯片：爆裂+好事（攻击），坚韧+磐石+以攻（防御）
+    [P+'cBL',P+'cHS',P+'eJR',P+'ePS',P+'eYG',P+'myFood',P+'eFood',P+'myFire'].forEach(id=>{const el=$(id);if(el)el.checked=true;});
+    // 喷火器：+16暴击,+24%暴伤
+    const wep=$(P+'weapon');if(wep)wep.value='16,24';
+    setCons();
+    // 全暴减改造
+    setSlots('reduc');
+  }
+  updWeaponMastery(pfx);
+}
+
+function applyPreset(pfx,type){
+  applyPresetCore(pfx,type);
+  dualCalcNow();
+  const ph=$(`presetPanel_${pfx}`);if(ph)ph.style.display='none';
+  const presetNames={human_fragile:'A · 人类脆皮',halfhuman_dodge:'B · 半人免暴武士',human_firefly:'C · 械骨人暴减萤火'};
+  showToast(`✅ 模型${pfx}已应用预设：${presetNames[type]||type}`,'ok');
+}
+
+/* 内部使用：将隐藏的模型B静默切换为指定预设，并返回其面板数值（不触发dualCalcNow，避免递归） */
+function getPresetStats(key){
+  applyPresetCore('B',key);
+  return getModelStats('B');
+}
+
+/* §11 状态捕获与回填 */
+function captureModelState(pfx){
+  const P=`d${pfx}_`,st={};
+  const g=id=>{const el=$(P+id);if(!el)return null;return el.type==='checkbox'?el.checked:el.value;};
+  const keys=['race','weapon','weapCat','subCrit','consEn','consVal','myFire','myFood','myBuffEn','myBuff','myOtherEn','myOther','myDmgEn','myDmg',
+    'eIce','eFood','eBuffEn','eBuff','eOtherEn','eOther','eReducEn','eReducExtra','mD_shieldExpand'];
+  [...ATK_CHIPS.map(c=>c[0]),...DEF_CHIPS.map(c=>c[0]),...keys].forEach(k=>st[k]=g(k));
+  ['A','B','C','D'].forEach(s=>{
+    st[`m${s}t`]=g(`m${s}t`);st[`m${s}v`]=g(`m${s}v`);
+    ['r1','r3','r4'].forEach(r=>{st[`m${s}134_${r}t`]=g(`m${s}134_${r}t`);st[`m${s}134_${r}v`]=g(`m${s}134_${r}v`);});
+  });
+  ['r3','r4'].forEach(r=>{st[`shield134_${r}t`]=g(`shield134_${r}t`);st[`shield134_${r}v`]=g(`shield134_${r}v`);});
+  st['shield_r2t']=g('shield_r2t');st['shield_r2v']=g('shield_r2v');
+  return st;
+}
+
+function restoreModelState(pfx,st){
+  if(!st)return;
+  const P=`d${pfx}_`;
+  Object.entries(st).forEach(([k,v])=>{const el=$(P+k);if(!el||v===null)return;if(el.type==='checkbox')el.checked=!!v;else el.value=v??'';});
+  onRaceChange(pfx,P+'race',P+'weapon',[`d${pfx}-human`],[`d${pfx}-halfhuman`]);
+  ['A','B','C','D'].forEach(s=>{setModLim(pfx,s);['r1','r3','r4'].forEach(r=>onMod134RowChg(pfx,s,r));});
+  [['myBuff','myBuffEn'],['myOther','myOtherEn'],['myDmg','myDmgEn'],['eBuff','eBuffEn'],['eOther','eOtherEn'],['eReducExtra','eReducEn'],['consVal','consEn']].forEach(([v,e])=>{const el=$(P+v);if(el)el.disabled=!chk(P+e);});
+  onShieldExpandChg(pfx);['r3','r4'].forEach(r=>onShieldRow134Chg(pfx,r));onShieldR2Chg(pfx);
+  dualCalcNow();
+}
+
+function _stateDefaults(){
+  const d={race:'186.8,human',weapon:'0,0',weapCat:'other',subCrit:'0',
+    consEn:false,consVal:'6',myFire:false,myFood:false,
+    myBuffEn:false,myBuff:'6',myOtherEn:false,myOther:'0',
+    myDmgEn:false,myDmg:'0',eIce:false,eFood:false,
+    eBuffEn:false,eBuff:'6',eOtherEn:false,eOther:'0',
+    eReducEn:false,eReducExtra:'0',mD_shieldExpand:false,
+    shield_r2t:'',shield_r2v:'0',
+    shield134_r3t:'',shield134_r3v:'0',shield134_r4t:'',shield134_r4v:'0'};
+  [...ATK_CHIPS.map(c=>c[0]),...DEF_CHIPS.map(c=>c[0])].forEach(k=>d[k]=false);
+  ['A','B','C','D'].forEach(s=>{
+    d[`m${s}t`]='crit';d[`m${s}v`]='0';
+    // 第一条：非D槽默认选中对应属性（无"无"选项）
+    const r1Defaults={A:'armor1',B:'atk1',C:'bonus3'};
+    d[`m${s}134_r1t`]=s!=='D'?(r1Defaults[s]||''):'';
+    d[`m${s}134_r1v`]='0';
+    ['r3','r4'].forEach(r=>{d[`m${s}134_${r}t`]='';d[`m${s}134_${r}v`]='0';});
+  });
+  return d;
+}
+function compressState(st){
+  const def=_stateDefaults();
+  return Object.fromEntries(Object.entries(st).filter(([k,v])=>v!==null&&v!==undefined&&v!==def[k]));
+}
+function decompressState(cst){return cst?Object.assign(_stateDefaults(),cst):null;}
+
+async function loadHistRec(i){
+  const h=JSON.parse(lsGet('dualHistory','[]'));
+  if(i>=h.length||!h[i].stateA){showToast('该记录无状态数据（旧版本记录不支持回填）','warn');return;}
+  const ok=await showConfirm(`确定回填记录【${h[i].name}】的参数？\n当前所有输入将被覆盖。`);
+  if(!ok)return;
+  restoreModelState('A',decompressState(h[i].stateA));
+  showToast('✅ 参数已回填！','ok');
+}
+
+/* §11b 视角同步
+   现在模型B已固定为三种快捷预设之一，被优化/被展示的对象永远是模型A：
+   atk_<presetKey> = 模型A攻击预设（优化A的进攻改造，目标：我方攻击暴击系数最高）
+   def_<presetKey> = 预设攻击模型A（优化A的防御改造，目标：自身受到暴击系数最低） */
+function syncOptTarget(v){
+  const m=/^(atk|def)_(.+)$/.exec(v||'');
+  const mode=m?m[1]:'atk', presetKey=m?m[2]:(PRESET_LIST[0]?PRESET_LIST[0].key:'human_fragile');
+  const target=mode==='atk'?'AB':'BA';
+  const bt=$('dBestTarget');if(bt)bt.value=target;
+  const bm=$('dBestModel');if(bm)bm.value='A';
+  const ot=$('dOptTarget');if(ot)ot.value=target;
+  const om=$('dOptMode');if(om)om.value=mode;
+  const pk=$('dOptPresetKey');if(pk)pk.value=presetKey;
+}
+
+/* §12 智能优化 */
+function dualSmartOpt(){
+  applyPresetCore('B',$('dOptPresetKey').value);
+  const target=$('dOptTarget').value,mode=$('dOptMode')?$('dOptMode').value:'atk';
+  const att=target==='AB'?'A':'B',def=target==='AB'?'B':'A';
+  const presetObj=PRESET_LIST.find(p=>p.key===$('dOptPresetKey').value);
+  const mLabel=x=>x==='A'?'模型A':(presetObj?presetObj.name:'预设模型');
+  const a=getModelStats(att),d=getModelStats(def);
+  const nc=Math.max(0,a.totalCrit-d.totalDodge),nr=Math.max(0,d.totalReduc);
+  const ad=Math.max(25,50+a.totalDmg-nr),c=calcCoeff(nc,a.totalDmg,nr);
+
+  let ana,opt;
+
+  if(mode==='def'){
+    // 防御视角：def 为受击方（即被优化的一方，永远是模型A），att 为固定不变的攻击方（预设）
+    let mDg=0,mR=0;['A','B','C','D'].forEach(p=>{const t=$(`d${def}_m${p}t`).value,v=fv(`d${def}_m${p}v`);if(t==='dodge')mDg+=v;else if(t==='reduc')mR+=v;});
+
+    ana=`<p><strong>当前对局（${mLabel(att)} → ${mLabel(def)}，防御视角）：</strong></p><ul><li>对方暴击：<strong>${a.totalCrit.toFixed(1)}</strong> ｜ 我方免暴：<strong>${d.totalDodge.toFixed(1)}</strong>（改造贡献 +${mDg.toFixed(1)}）</li><li>净暴击（对方）：<strong>${nc.toFixed(1)}</strong></li><li>我方暴减：<strong>${nr.toFixed(1)}%</strong>（改造贡献 +${mR.toFixed(1)}%）｜ 对方暴伤：${a.totalDmg.toFixed(1)}%</li><li>我方受击系数：<strong>${(c*100).toFixed(2)}%</strong></li></ul>`;
+
+    if(nc<=0){
+      const spare=(d.totalDodge-a.totalCrit);
+      opt=`<p>🟢 <strong>当前状态：完全免疫暴击（防御已达理论最优）</strong></p><p>我方免暴（${d.totalDodge.toFixed(1)}）已超过对方暴击（${a.totalCrit.toFixed(1)}），对方无法进入暴击区，受击系数已锁定在理论最低值 <strong>100%</strong>。</p><hr style="border:none;border-top:1px dashed var(--border);margin:8px 0"><p><strong>📌 优化方向：免暴已冗余，可置换其它属性</strong></p><ul><li>当前免暴超出对方暴击 <strong>${spare.toFixed(1)}</strong> 点，这部分免暴暂无收益。</li><li>可将多余免暴改造槽换为暴减（防止对方后续提升暴击）或进攻属性。</li></ul>`;
+    } else if(nc<100){
+      // 边际收益对比：增1点免暴 vs 增1%暴减，对受击系数的降低量
+      // 系数 = min(nc,100)/100 * ad/100 + 1
+      // d系数/d免暴 = -ad/10000（nc<100时，免暴每+1，nc-1，系数降低ad/10000）
+      // d系数/d暴减 = -nc/10000（nc<100时，暴减每+1%，ad-1，系数降低nc/10000）
+      const dG=ad/10000, rG=nc/10000;
+      const preferDodge=dG>=rG, toImmune=(100-nc).toFixed(1);
+      const reason=preferDodge
+        ?`当前对方实际暴伤(${ad.toFixed(1)}%)≥净暴击(${nc.toFixed(1)})，增1免暴可降低系数(${(dG*100).toFixed(3)}%)≥增1%暴减可降低系数(${(rG*100).toFixed(3)}%)。`
+        :`当前净暴击(${nc.toFixed(1)})＞对方实际暴伤(${ad.toFixed(1)}%)，增1%暴减可降低系数(${(rG*100).toFixed(3)}%)＞增1免暴可降低系数(${(dG*100).toFixed(3)}%)。`;
+      const detail=preferDodge
+        ?`再增 <strong>${toImmune}</strong> 点免暴即可让对方完全脱离暴击区（系数一次性锁定100%），优先堆免暴。`
+        :`继续堆免暴边际收益已低于暴减，建议优先堆暴减来压低对方实际暴伤。`;
+      opt=`<p>🟡 <strong>当前状态：仍处于对方暴击区内（净暴击 ${nc.toFixed(1)}/100）</strong></p><p>${reason}</p><hr style="border:none;border-top:1px dashed var(--border);margin:8px 0"><p><strong>📌 优化方向：${preferDodge?'优先堆免暴':'优先堆暴减'}</strong></p><ul><li>${detail}</li><li>增1点免暴对系数降低：<strong>${(dG*100).toFixed(4)}%</strong> ｜ 增1%暴减对系数降低：<strong>${(rG*100).toFixed(4)}%</strong></li><li>可借助「🔍 自动最佳示例」，由系统穷举出当前面板下受击系数最低的免暴/暴减组合。</li></ul>`;
+    } else {
+      opt=`<p>🔴 <strong>当前状态：暴击区已锁满（净暴击 ${nc.toFixed(1)} ≥ 100）</strong></p><p>当前免暴不足以让对方脱离暴击区，在补到对方暴击-100之前，继续增加免暴暂无收益。</p><hr style="border:none;border-top:1px dashed var(--border);margin:8px 0"><p><strong>📌 优化方向：全力堆暴减</strong></p><ul><li>将所有大件/小件改造槽切换为【暴减】类型，最大化压低对方实际暴伤。</li><li>当前对方实际暴伤：<strong>${ad.toFixed(1)}%</strong>，理论最低约 <strong>25%</strong>（暴减拉满时）。</li><li>若有余力，也可评估一次性堆免暴至 <strong>${(a.totalCrit-100).toFixed(1)}</strong> 以下，让对方完全脱离暴击区。</li></ul>`;
+    }
+  } else {
+    let mc=0,md=0;['A','B','C','D'].forEach(p=>{const t=$(`d${att}_m${p}t`).value,v=fv(`d${att}_m${p}v`);if(t==='crit')mc+=v;else if(t==='dmg')md+=v;});
+
+    ana=`<p><strong>当前对局（${mLabel(att)} → ${mLabel(def)}）：</strong></p><ul><li>净暴击：<strong>${nc.toFixed(1)}</strong>（改造贡献 +${mc.toFixed(1)}）</li><li>实际暴伤：<strong>${ad.toFixed(1)}%</strong>（改造贡献 +${md.toFixed(1)}%）</li><li>当前系数：<strong>${(c*100).toFixed(2)}%</strong></li><li>对方免暴：${d.totalDodge.toFixed(1)}，对方暴减：${nr.toFixed(1)}%</li></ul>`;
+
+    if(nc<=0){
+      const needed=Math.ceil(d.totalDodge-a.totalCrit+1);
+      opt=`<p>🔴 <strong>当前状态：未进入暴击区</strong></p><p>净暴击为负（${(a.totalCrit-d.totalDodge).toFixed(1)}），暴击区增伤完全失效。</p><hr style="border:none;border-top:1px dashed var(--border);margin:8px 0"><p><strong>📌 优化方向：全力堆暴击</strong></p><ul><li>还需增约 <strong>${needed}</strong> 点改造暴击，才能进入暴击区。</li><li>将全部大件/小件改造槽切换为【暴击】类型。</li><li>进入暴击区后，再重新评估暴击 vs 暴伤的取舍。</li></ul>`;
+    } else if(nc<100){
+      // 边际收益对比：增1点暴击 vs 增1%暴伤，对系数的提升量
+      // 系数 = min(nc,100)/100 * ad/100 + 1
+      // d系数/d暴击 = ad/100 * 1/100 = ad/10000（nc<100时）
+      // d系数/d暴伤 = min(nc,100)/100 * 1/100 = nc/10000（nc<100时）
+      const cG=ad/10000, dG=nc/10000;
+      const preferCrit=cG>dG,toFull=(100-nc).toFixed(1);
+      const reason=preferCrit
+        ?`当前实际暴伤(${ad.toFixed(1)}%)高于净暴击(${nc.toFixed(1)})，增1暴击收益(${(cG*100).toFixed(3)}%)＞增1%暴伤收益(${(dG*100).toFixed(3)}%)。`
+        :`当前净暴击(${nc.toFixed(1)})高于实际暴伤(${ad.toFixed(1)}%)，增1%暴伤收益(${(dG*100).toFixed(3)}%)＞增1暴击收益(${(cG*100).toFixed(3)}%)。`;
+      const detail=preferCrit
+        ?`距离暴击区满还差 <strong>${toFull}</strong> 点净暴击，建议将部分暴伤槽换为暴击，注意不要过度压缩暴伤上限。`
+        :`暴击区内还有 <strong>${toFull}</strong> 点余量，但当前暴伤更短缺，建议将部分暴击槽换为暴伤来提升总系数。`;
+      opt=`<p>🟡 <strong>当前状态：暴击区内（净暴击 ${nc.toFixed(1)}/100）</strong></p><p>${reason}</p><hr style="border:none;border-top:1px dashed var(--border);margin:8px 0"><p><strong>📌 优化方向：${preferCrit?'优先堆暴击':'优先堆暴伤'}</strong></p><ul><li>${detail}</li><li>增1点暴击对系数提升：<strong>${(cG*100).toFixed(4)}%</strong> ｜ 增1%暴伤对系数提升：<strong>${(dG*100).toFixed(4)}%</strong></li><li>可借助「🔍 自动最佳示例」，由系统穷举出当前面板下的最优改造组合。</li></ul>`;
+    } else {
+      opt=`<p>🟢 <strong>当前状态：暴击已满（净暴击 ${nc.toFixed(1)} ≥ 100）</strong></p><p>净暴击已达100%上限，继续堆暴击不再产生收益。</p><hr style="border:none;border-top:1px dashed var(--border);margin:8px 0"><p><strong>📌 优化方向：全力堆暴伤</strong></p><ul><li>将所有大件/小件改造槽切换为【暴伤】类型，最大化实际暴伤。</li><li>当前实际暴伤：<strong>${ad.toFixed(1)}%</strong>，理论最大约 <strong>${(50+a.totalDmg).toFixed(1)}%</strong>。</li><li>如已配满暴伤，可考虑调整芯片搭配进一步提升面板。</li></ul>`;
+    }
+  }
+
+  $('dAna').innerHTML=ana;
+  $('dOpt').innerHTML=opt;
+  const rec=$('dualRecSec');rec.style.display='block';
+  rec.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  rec.querySelectorAll('.tab-body').forEach((t,i)=>t.classList.toggle('active',i===0));
+  rec.scrollIntoView({behavior:'smooth'});
+}
+
+/* §13 自动最佳方案（Worker穷举）
+   注意：Worker 内联函数 cc() 与主线程 calcCoeff() 公式完全一致，如需修改请两处同步
+   mode='atk'：进攻视角，在暴击/暴伤空间穷举，使「我方攻击暴击系数」最大化
+   mode='def'：防御视角，在免暴/暴减空间穷举，使「自身受到暴击系数」最小化 */
+const WORKER_SRC=`self.onmessage=function(e){
+  const{mode,bC,bD,eD,eR}=e.data;
+  /* cc() 与主线程 calcCoeff() 相同公式 */
+  function cc(nc,td,dr){if(nc<=0)return 1;const lc=Math.min(nc,100),ad=Math.max(25,50+td-Math.max(0,dr));return lc/100*ad/100+1;}
+  let best,bc=null;
+  if(mode==='def'){
+    /* 防御：bC/bD 为对方（攻击方）固定的暴击/暴伤；eD/eR 为我方（防御方）除4个改造槛外的基础免暴/暴减
+       在免暴(dodge)/暴减(reduc)空间穷举，寻找使受击系数 c 最小的组合 */
+    best=Infinity;const T=['dodge','reduc'],bL={dodge:15,reduc:25},sL={dodge:7.5,reduc:12.5};
+    for(const at of T)for(let av=0;av<=bL[at];av++)for(const bt of T)for(let bv=0;bv<=bL[bt];bv++)
+    for(const ct of T)for(let cv=0;cv<=sL[ct];cv+=.5)for(const dt of T)for(let dv=0;dv<=sL[dt];dv+=.5){
+      let mDg=0,mR=0;at==='dodge'?mDg+=av:mR+=av;bt==='dodge'?mDg+=bv:mR+=bv;ct==='dodge'?mDg+=cv:mR+=cv;dt==='dodge'?mDg+=dv:mR+=dv;
+      const nc=Math.max(0,bC-(eD+mDg)),c=cc(nc,bD,eR+mR);if(c<best){best=c;bc={at,av,bt,bv,ct,cv,dt,dv};}
+    }
+  } else {
+    /* 进攻：bC/bD 为我方（攻击方）除4个改造槛外的基础暴击/暴伤；eD/eR 为对方（防御方）固定的免暴/暴减
+       在暴击(crit)/暴伤(dmg)空间穷举，寻找使我方攻击系数 c 最大的组合 */
+    best=0;const T=['crit','dmg'],bL={crit:15,dmg:25},sL={crit:7.5,dmg:12.5};
+    for(const at of T)for(let av=0;av<=bL[at];av++)for(const bt of T)for(let bv=0;bv<=bL[bt];bv++)
+    for(const ct of T)for(let cv=0;cv<=sL[ct];cv+=.5)for(const dt of T)for(let dv=0;dv<=sL[dt];dv+=.5){
+      let mc=0,md=0;at==='crit'?mc+=av:md+=av;bt==='crit'?mc+=bv:md+=bv;ct==='crit'?mc+=cv:md+=cv;dt==='crit'?mc+=dv:md+=dv;
+      const nc=Math.max(0,bC+mc-eD),c=cc(nc,bD+md,eR);if(c>best){best=c;bc={at,av,bt,bv,ct,cv,dt,dv};}
+    }
+  }
+  self.postMessage({best,bc,mode});
+};`;
+
+function dualGetBaseForOpt(m){
+  const s=getModelStats(m);let mc=0,md=0;
+  ['A','B','C','D'].forEach(p=>{const t=$(`d${m}_m${p}t`).value,v=fv(`d${m}_m${p}v`);if(t==='crit')mc+=v;else if(t==='dmg')md+=v;});
+  return{crit:s.totalCrit-mc,dmg:s.totalDmg-md};
+}
+
+function dualGetBaseForOptDef(m){
+  const s=getModelStats(m);let mDg=0,mR=0;
+  ['A','B','C','D'].forEach(p=>{const t=$(`d${m}_m${p}t`).value,v=fv(`d${m}_m${p}v`);if(t==='dodge')mDg+=v;else if(t==='reduc')mR+=v;});
+  return{dodge:s.totalDodge-mDg,reduc:s.totalReduc-mR};
+}
+
+function dualAutoBest(){
+  if(_workerBusy){showToast('计算进行中，请稍候…','warn');return;}
+  applyPresetCore('B',$('dOptPresetKey').value);
+  const m=$('dBestModel').value,om=m==='A'?'B':'A';
+  const mode=$('dOptMode')?$('dOptMode').value:'atk';
+  const other=getModelStats(om);
+  $('dualCalcLoad').style.display='block';
+  document.querySelectorAll('#dualView .btn,#dualView .inline-btn').forEach(b=>b.disabled=true);
+  _workerBusy=true;
+  const worker=getWorker();
+  let payload;
+  if(mode==='def'){
+    // 防御视角：m 为受击方（被优化），om 为攻击方（固定不变）
+    const base=dualGetBaseForOptDef(m);
+    payload={mode:'def',bC:other.totalCrit,bD:other.totalDmg,eD:base.dodge,eR:Math.max(0,base.reduc)};
+  } else {
+    // 进攻视角：m 为攻击方（被优化），om 为防御方（固定不变）
+    const base=dualGetBaseForOpt(m);
+    payload={mode:'atk',bC:base.crit,bD:base.dmg,eD:other.totalDodge,eR:Math.max(0,other.totalReduc)};
+  }
+  worker.postMessage(payload);
+  worker.onmessage=({data:{best,bc,mode:rMode}})=>{
+    _workerBusy=false;
+    $('dualCalcLoad').style.display='none';
+    document.querySelectorAll('#dualView .btn,#dualView .inline-btn').forEach(b=>b.disabled=false);
+    if(bc){
+      const{at,av,bt,bv,ct,cv,dt,dv}=bc;
+      [['A',at,av],['B',bt,bv],['C',ct,cv],['D',dt,dv]].forEach(([s,t,v])=>{$(`d${m}_m${s}t`).value=t;$(`d${m}_m${s}v`).value=v.toFixed(1);setModLim(m,s);});
+      dualCalcNow();
+      const out=$('dBestOut');out.style.display='block';
+      if(rMode==='def'){
+        const lbl=t=>t==='dodge'?'免暴':'暴减';
+        out.innerHTML=`<button class="close-best-btn" onclick="document.getElementById('dBestOut').style.display='none'">✕</button>
+          <strong>模型${m}最佳防御改造：</strong><br>大件A：${lbl(at)} +${av.toFixed(1)}<br>大件B：${lbl(bt)} +${bv.toFixed(1)}<br>小件A：${lbl(ct)} +${cv.toFixed(1)}<br>小件B：${lbl(dt)} +${dv.toFixed(1)}<br><strong>最低受击系数：${(best*100).toFixed(2)}%</strong>`;
+      } else {
+        out.innerHTML=`<button class="close-best-btn" onclick="document.getElementById('dBestOut').style.display='none'">✕</button>
+          <strong>模型${m}最佳改造：</strong><br>大件A：${at==='crit'?'暴击':'暴伤'} +${av.toFixed(1)}<br>大件B：${bt==='crit'?'暴击':'暴伤'} +${bv.toFixed(1)}<br>小件A：${ct==='crit'?'暴击':'暴伤'} +${cv.toFixed(1)}<br>小件B：${dt==='crit'?'暴击':'暴伤'} +${dv.toFixed(1)}<br><strong>最优系数：${(best*100).toFixed(2)}%</strong>`;
+      }
+    }
+  };
+  worker.onerror=()=>{_workerBusy=false;_worker=null;showToast('后台计算出错，请重试','err');$('dualCalcLoad').style.display='none';document.querySelectorAll('#dualView .btn,#dualView .inline-btn').forEach(b=>b.disabled=false);};
+}
+
+/* §14 改造对比（固定模型A，对手为可选预设） */
+function updCmpWeapCatHint(){
+  const sel=$('dA_weapCat');
+  const names={other:'其他枪械',duelball:'决斗电球',grenade:'榴弹炮'};
+  const lbl=$('cmpWeapCatLabel');
+  if(lbl)lbl.textContent=sel?names[sel.value]||sel.value:'-';
+}
+function updDualCmpLim(){
+  const part=$('dCmpPart').value;if(!part)return;
+  buildCmp134Plans();
+  updCmpWeapCatHint();
+}
+
+function copyCmpFrom(pfx){
+  const part=$('dCmpPart').value;
+  if(!part){showToast('请先选择比较部位','warn');return;}
+  const P=`d${pfx}_`;
+  updCmpWeapCatHint();
+
+  // 通用复制函数：同时复制到 dc1 和 dc2
+  const copyRow134=(row)=>{
+    const tSrc=$(`${P}m${part}134_${row}t`),vSrc=$(`${P}m${part}134_${row}v`);
+    ['dc1','dc2'].forEach(p=>{
+      const tDst=$(p+`_${row}t`),vDst=$(p+`_${row}v`);
+      if(tSrc&&tDst){ tDst.value=tSrc.value; updDualCmpRow(p,row); if(vSrc&&vDst)vDst.value=vSrc.value; }
+    });
+  };
+
+  // 复制第一条（134）
+  copyRow134('r1');
+
+  // 复制第二条（暴击/免暴/暴伤/暴减）—— 四种类型全部支持
+  // 改造参数的 value 与对比面板完全一致（crit/dodge/dmg/reduc），直接赋值即可
+  const r2tSrc=$(`${P}m${part}t`),r2vSrc=$(`${P}m${part}v`);
+  ['dc1','dc2'].forEach(p=>{
+    const r2tDst=$(p+'_r2t'),r2vDst=$(p+'_r2v');
+    if(r2tSrc&&r2tDst){
+      const t=r2tSrc.value;
+      // 四种类型均可复制，'无'(空字符串)时清空
+      r2tDst.value=(['crit','dodge','dmg','reduc'].includes(t))?t:'';
+      updDualCmpRow2(p); // 先初始化（启用 input、设置 max）
+      if(r2vDst&&r2tDst.value)r2vDst.value=r2vSrc?r2vSrc.value:'0'; // 再赋值
+    }
+  });
+
+  // 复制第三、四条（134）
+  copyRow134('r3');
+  copyRow134('r4');
+
+  showToast(`✅ 已将模型${pfx}·部位${part}的配置复制到改造方案1和2，请分别修改两个方案进行对比`,'ok',3500);
+}
+function doDualCmp(){
+  const m='A',part=$('dCmpPart').value;
+  if(!part){showToast('请选择比较部位','warn');return;}
+  const presetKey=$('dCmpPresetKey')?.value||(PRESET_LIST[0]?PRESET_LIST[0].key:'human_fragile');
+  applyPresetCore('B',presetKey);
+  const presetName=(PRESET_LIST.find(p=>p.key===presetKey)||{}).name||'预设模型';
+  const om='B';
+  const other=getModelStats(om),base=getModelStats(m);
+
+  // 从模型 m 的所有改造中提取所有4类贡献
+  let aC=0,aD=0,aDg=0,aR=0,oC=0,oD=0,oDg=0,oR=0;
+  ['A','B','C','D'].forEach(p=>{
+    const t=$(`d${m}_m${p}t`).value,v=fv(`d${m}_m${p}v`);
+    if(t==='crit')aC+=v; else if(t==='dmg')aD+=v; else if(t==='dodge')aDg+=v; else if(t==='reduc')aR+=v;
+    if(p!==part){
+      if(t==='crit')oC+=v; else if(t==='dmg')oD+=v; else if(t==='dodge')oDg+=v; else if(t==='reduc')oR+=v;
+    }
+  });
+
+  // bX = 去掉全部改造后的"纯基础"各属性
+  const bC=base.totalCrit-aC, bD=base.totalDmg-aD;
+  const bDg=base.totalDodge-aDg, bR=base.totalReduc-aR;
+
+  // 对方属性（固定）
+  const eD=other.totalDodge, eR=Math.max(0,other.totalReduc);
+  // 我方基础免暴、暴减（不含选定部位）
+  const myBaseDg=bDg+oDg, myBaseR=bR+oR;
+
+  // 读取改造方案第二条
+  const getR2=(p)=>{const t=$(`${p}_r2t`)?.value||'',v=parseFloat($(`${p}_r2v`)?.value)||0;return{t,v};};
+
+  // PartA 攻击方向：m 打 om
+  const calcAtk=(r2t,r2v)=>{
+    const tc=bC+oC+(r2t==='crit'?r2v:0);
+    const td=bD+oD+(r2t==='dmg'?r2v:0);
+    const nc=Math.max(0,tc-eD);
+    const ad=Math.max(25,50+td-eR);
+    const c=calcCoeff(nc,td,eR);
+    return{nc,ad,c};
+  };
+
+  // PartA 受击方向：om 打 m（dodge/reduc 类型的第二条改造提升我方防御）
+  const calcDef=(r2t,r2v)=>{
+    // 我方免暴（影响对方净暴击）
+    const myDg=myBaseDg+(r2t==='dodge'?r2v:0);
+    // 我方暴减（影响对方实际暴伤）
+    const myR=Math.max(0,myBaseR+(r2t==='reduc'?r2v:0));
+    // 对方打我：对方净暴击 = max(0, 对方总暴击 - 我方总免暴)
+    const ncDef=Math.max(0,other.totalCrit-myDg);
+    // 对方打我：实际暴伤 = max(25, 50 + 对方总暴伤 - 我方总暴减)
+    const adDef=Math.max(25,50+other.totalDmg-myR);
+    // 对面打我的暴击区系数
+    const cDef=calcCoeff(ncDef,other.totalDmg,myR);
+    return{ncDef,adDef,cDef};
+  };
+
+  const r2_1=getR2('dc1'),r2_2=getR2('dc2');
+  const atk1=calcAtk(r2_1.t,r2_1.v),atk2=calcAtk(r2_2.t,r2_2.v);
+  const def1=calcDef(r2_1.t,r2_1.v),def2=calcDef(r2_2.t,r2_2.v);
+
+  // 更新 PartA 显示
+  $('dc1nc').textContent=atk1.nc.toFixed(1);
+  $('dc1nd').textContent=atk1.ad.toFixed(1);
+  $('dc1co').textContent=(atk1.c*100).toFixed(2);
+  $('dc1co_def').textContent=(def1.cDef*100).toFixed(2);
+  $('dc2nc').textContent=atk2.nc.toFixed(1);
+  $('dc2nd').textContent=atk2.ad.toFixed(1);
+  $('dc2co').textContent=(atk2.c*100).toFixed(2);
+  $('dc2co_def').textContent=(def2.cDef*100).toFixed(2);
+
+  // PartB：一三四系数
+  const wC=$(`d${m}_weapCat`)?.value||'other',shE=chk(`d${m}_mD_shieldExpand`);
+  let b4A=0,b4D=0;
+  ['A','B','C','D'].forEach(s=>{
+    if(s===part)return;
+    ['r1','r3','r4'].forEach(row=>{
+      const typ=$(`d${m}_m${s}134_${row}t`)?.value||'',val=parseFloat($(`d${m}_m${s}134_${row}v`)?.value)||0;
+      const d=compute134Delta(wC,typ,val);b4A+=d.atk;b4D+=d.def;
+    });
+  });
+  if(shE&&part!=='D'){
+    b4D+=10*0.015;
+    ['r3','r4'].forEach(row=>{const t=$(`d${m}_shield134_${row}t`)?.value||'',v=parseFloat($(`d${m}_shield134_${row}v`)?.value)||0,d=compute134Delta(wC,t,v);b4A+=d.atk;b4D+=d.def;});
+  }
+  const planCoeff=p=>{let a=0,d=0;['r1','r3','r4'].forEach(row=>{const t=$(`${p}_${row}t`)?.value||'',v=parseFloat($(`${p}_${row}v`)?.value)||0,x=compute134Delta(wC,t,v);a+=x.atk;d+=x.def;});return{a,d,t:a+d};};
+  const p1=planCoeff('dc1'),p2=planCoeff('dc2');
+  const sum1=b4A+p1.a+b4D+p1.d, sum2=b4A+p2.a+b4D+p2.d;
+
+  $('dc1_134atk').textContent=(b4A+p1.a).toFixed(4);
+  $('dc1_134def').textContent=(b4D+p1.d).toFixed(4);
+  $('dc1_134sum').textContent=sum1.toFixed(4);
+  $('dc2_134atk').textContent=(b4A+p2.a).toFixed(4);
+  $('dc2_134def').textContent=(b4D+p2.d).toFixed(4);
+  $('dc2_134sum').textContent=sum2.toFixed(4);
+
+  // 顶部结论区
+  const winColor=v=>v>0?'var(--green)':v<0?'var(--red)':'var(--text2)';
+  const winLabel=(v,w1,w2)=>Math.abs(v)<0.0001?'两者相同':v>0?`方案1更好（${w1}）`:`方案2更好（${w2}）`;
+
+  // 第二条：攻击暴击系数对比（数值越高越好）
+  const diffAtk=atk1.c-atk2.c;
+  $('dCmpVerdict_r2').textContent=winLabel(diffAtk,`+${(diffAtk*100).toFixed(2)}%`,`+${(Math.abs(diffAtk)*100).toFixed(2)}%`);
+  $('dCmpVerdict_r2').style.color=winColor(diffAtk);
+  if(Math.abs(diffAtk)>=0.0001){
+    $('dCmpDiff_r2').textContent=`方案1: ${(atk1.c*100).toFixed(2)}% ｜ 方案2: ${(atk2.c*100).toFixed(2)}%`;
+  } else {
+    $('dCmpDiff_r2').textContent=`均为 ${(atk1.c*100).toFixed(2)}%`;
+  }
+
+  // 第二条：受击暴击系数对比（数值越低越好，与攻击方向相反）
+  const diffDef=def1.cDef-def2.cDef;
+  const winLabelLowerBetter=(v,w1,w2)=>Math.abs(v)<0.0001?'两者相同':v<0?`方案1更好（${w1}）`:`方案2更好（${w2}）`;
+  const winColorLowerBetter=v=>v<0?'var(--green)':v>0?'var(--red)':'var(--text2)';
+  const defBetterAmt=`-${(Math.abs(diffDef)*100).toFixed(2)}%`;
+  $('dCmpVerdict_def').textContent=winLabelLowerBetter(diffDef,defBetterAmt,defBetterAmt);
+  $('dCmpVerdict_def').style.color=winColorLowerBetter(diffDef);
+  if(Math.abs(diffDef)>=0.0001){
+    $('dCmpDiff_def').textContent=`方案1: ${(def1.cDef*100).toFixed(2)}% ｜ 方案2: ${(def2.cDef*100).toFixed(2)}%`;
+  } else {
+    $('dCmpDiff_def').textContent=`均为 ${(def1.cDef*100).toFixed(2)}%`;
+  }
+
+  // 一三四：合计对比
+  const diff134=sum1-sum2;
+  $('dCmpVerdict_134').textContent=winLabel(diff134,`+${diff134.toFixed(4)}`,`+${Math.abs(diff134).toFixed(4)}`);
+  $('dCmpVerdict_134').style.color=winColor(diff134);
+  if(Math.abs(diff134)>=0.00001){
+    $('dCmpDiff_134').textContent=`方案1: ${sum1.toFixed(4)} ｜ 方案2: ${sum2.toFixed(4)}`;
+  } else {
+    $('dCmpDiff_134').textContent=`均为 ${sum1.toFixed(4)}`;
+  }
+
+  // 显示面板
+  $('dCmpResultPanel').style.display='block';
+
+  // 视角说明
+  const r2t1=r2_1.t,r2t2=r2_2.t;
+  const typeLabel={crit:'暴击',dmg:'暴伤',dodge:'免暴',reduc:'暴减'};
+  const defNote=(r2t1==='dodge'||r2t1==='reduc'||r2t2==='dodge'||r2t2==='reduc')?
+    `｜受击系数：${presetName}→模型A，免暴基础${myBaseDg.toFixed(1)}，暴减基础${myBaseR.toFixed(1)}%`:'';
+  const note=$('dCmpViewNote');
+  if(note)note.textContent=`📌 攻击视角：模型A→${presetName}，对方免暴${eD.toFixed(1)}，对方暴减${eR.toFixed(1)}%${defNote}`;
+}
+
+/* §15 历史记录 */
+async function dualSaveRec(){
+  dualCalcNow();
+  const wA=$('dA_weapon');
+  const weapA=cleanWeapName(wA.options[wA.selectedIndex].text);
+  const r134A=calc134ForModel('A');
+  const sA=getScoreBadgeText(r134A.atkTotal,r134A.defTotal,'A');
+  const presetCoeffs={};
+  PRESET_LIST.forEach(p=>{
+    presetCoeffs[p.key]={
+      atk:($(`dCoeff_${p.key}_atk`)?.textContent||'-').replace('%',''),
+      def:($(`dCoeff_${p.key}_def`)?.textContent||'-').replace('%','')
+    };
+  });
+  const name=await showPrompt('请输入记录名称:','未命名');
+  if(name===null)return;
+  const notes=await showPrompt('备注（可选，直接确定跳过）:','');
+  let h=JSON.parse(lsGet('dualHistory','[]'));
+  h.unshift({name:name||'未命名',notes:notes||'',weapA,presetCoeffs,
+    a134total:r134A.total134.toFixed(4),a134atk:r134A.atkTotal.toFixed(4),a134def:r134A.defTotal.toFixed(4),
+    aScoreOut:sA.out,aScoreDef:sA.def,aScoreMix:sA.mix,
+    stateA:compressState(captureModelState('A')),
+    time:new Date().toLocaleString()});
+  if(h.length>HIST_MAX){h=h.slice(0,HIST_MAX);showToast(`记录已达上限${HIST_MAX}条，最旧的已自动删除。`,'warn');}
+  if(lsSet('dualHistory',JSON.stringify(h))){dualRenderHist(h);showToast('✅ 已保存！','ok');}
+}
+
+function delHistRec(i){let h=JSON.parse(lsGet('dualHistory','[]'));h.splice(i,1);if(lsSet('dualHistory',JSON.stringify(h)))dualRenderHist(h);}
+async function clearHist(k,fn){const ok=await showConfirm('确定清空所有历史记录？此操作不可撤销。');if(ok){localStorage.removeItem(k);fn([]);showToast('已清空','ok');}}
+
+function dualRenderHist(h){
+  const tbody=$('dualHistBody');
+  if(!h.length){tbody.innerHTML='<tr><td colspan="13" class="no-hist">暂无记录</td></tr>';return;}
+  const tr=(s,n=8)=>s&&s.length>n?s.slice(0,n)+'…':(s||'-');
+  const sc=s=>{if(s==='满分！')return'color:#7A5000;font-weight:700';if(s==='优秀')return'color:#3A1A6A;font-weight:700';if(s==='良好')return'color:#1A4A6A';if(s==='及格')return'color:#2A6A3A';if(s==='不及格')return'color:#6A1A1A';return'color:var(--text2)';};
+  const pc=(r,key)=>{const c=(r.presetCoeffs||{})[key]||{};return`${c.atk||'-'}% / ${c.def||'-'}%`;};
+  tbody.innerHTML=h.map((r,i)=>{
+    const hasState=!!(r.stateA);
+    const nameCell=r.notes?`<span title="${r.notes}">${tr(r.name,8)} 📝</span>`:tr(r.name,8);
+    return`<tr>
+      <td>${i+1}</td>
+      <td title="${r.name}${r.notes?'\n备注:'+r.notes:''}">${nameCell}</td>
+      <td>${tr(r.weapA,6)}</td>
+      <td>${pc(r,'human_fragile')}</td>
+      <td>${pc(r,'halfhuman_dodge')}</td>
+      <td>${pc(r,'human_firefly')}</td>
+      <td style="color:var(--cmp-atk)">${r.a134atk||'-'}</td><td style="color:var(--cmp-def)">${r.a134def||'-'}</td><td style="color:var(--cmp-sum);font-weight:700">${r.a134total||'-'}</td>
+      <td style="${sc(r.aScoreOut||'-')}">${r.aScoreOut||'-'}</td><td style="${sc(r.aScoreDef||'-')}">${r.aScoreDef||'-'}</td><td style="${sc(r.aScoreMix||'-')}">${r.aScoreMix||'-'}</td>
+      <td>
+        ${hasState?`<button class="load-btn" onclick="loadHistRec(${i})">回填</button><br>`:''}
+        <button class="del-btn" style="margin-top:2px" onclick="delHistRec(${i})">删除</button>
+      </td></tr>`;
+  }).join('');
+}
+
+function dlFile(content,name,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name+'_'+new Date().toLocaleDateString().replace(/\//g,'-');a.click();URL.revokeObjectURL(a.href);}
+
+function exportDualHistTxt(){
+  const h=JSON.parse(lsGet('dualHistory','[]'));
+  if(!h.length){showToast('暂无记录可导出','warn');return;}
+  const lines=['共创服改造助手 - 历史记录导出','导出时间：'+new Date().toLocaleString(),'='.repeat(60),''];
+  const fmt=(r,key)=>{const c=(r.presetCoeffs||{})[key]||{};return`攻${c.atk||'-'}%/受${c.def||'-'}%`;};
+  h.forEach((r,i)=>{
+    lines.push(`【${i+1}】${r.name}  (${r.time})${r.notes?'  备注:'+r.notes:''}`);
+    lines.push(`  武器:${r.weapA||'-'}`);
+    lines.push(`  预设A·人类脆皮:${fmt(r,'human_fragile')}  预设B·半人免暴武士:${fmt(r,'halfhuman_dodge')}  预设C·人类暴减萤火:${fmt(r,'human_firefly')}`);
+    lines.push(`  一三四  增伤:${r.a134atk||'-'}  减伤:${r.a134def||'-'}  合计:${r.a134total||'-'}`);
+    lines.push(`  流派  输出:${r.aScoreOut||'-'}  减免:${r.aScoreDef||'-'}  混合:${r.aScoreMix||'-'}`);
+    lines.push('-'.repeat(60));
+  });
+  dlFile(lines.join('\n'),'系数记录.txt','text/plain;charset=utf-8');
+}
+
+/* §15b Excel备份导入 */
+const DUALHIST_COLS=['name','notes','weapA','presetCoeffs','a134atk','a134def','a134total','aScoreOut','aScoreDef','aScoreMix','stateA','time'];
+
+function exportDualHistExcel(){
+  const h=JSON.parse(lsGet('dualHistory','[]'));
+  if(!h.length){showToast('暂无记录可导出','warn');return;}
+  if(typeof XLSX==='undefined'){showToast('Excel组件加载失败，请检查网络后重试','err');return;}
+  const rows=h.map(r=>{
+    const o={};
+    DUALHIST_COLS.forEach(k=>{
+      let v=r[k];
+      if(k==='presetCoeffs'||k==='stateA')v=v?JSON.stringify(v):'';
+      o[k]=(v===undefined||v===null)?'':String(v);
+    });
+    return o;
+  });
+  const ws=XLSX.utils.json_to_sheet(rows,{header:DUALHIST_COLS});
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'记录');
+  XLSX.writeFile(wb,'系数记录备份_'+new Date().toLocaleDateString().replace(/\//g,'-')+'.xlsx');
+  showToast(`已导出 ${h.length} 条记录`,'ok');
+}
+
+function importDualHistExcel(){
+  if(typeof XLSX==='undefined'){showToast('Excel组件加载失败，请检查网络后重试','err');return;}
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel';
+  inp.onchange=async e=>{
+    const file=e.target.files[0];if(!file)return;
+    let records;
+    try{
+      const buf=await file.arrayBuffer();
+      const wb=XLSX.read(buf,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      records=XLSX.utils.sheet_to_json(ws,{defval:''}).map(row=>{
+        const r={};DUALHIST_COLS.forEach(k=>{r[k]=row[k]!==undefined?String(row[k]):'';});
+        try{r.presetCoeffs=r.presetCoeffs?JSON.parse(r.presetCoeffs):{};}catch{r.presetCoeffs={};}
+        try{r.stateA=r.stateA?JSON.parse(r.stateA):null;}catch{r.stateA=null;}
+        return r;
+      });
+    }catch{showToast('文件格式错误，无法解析Excel文件','err');return;}
+    if(!records||!records.length){showToast('未找到可导入的记录','warn');return;}
+    const ok=await showConfirm(`将导入 ${records.length} 条记录，与现有记录合并（相同时间戳的重复记录会保留）。确定继续？`);
+    if(!ok)return;
+    let existing=JSON.parse(lsGet('dualHistory','[]'));
+    const existTimes=new Set(existing.map(r=>r.time).filter(Boolean));
+    const newRecs=records.filter(r=>!r.time||!existTimes.has(r.time));
+    const merged=[...newRecs,...existing].slice(0,HIST_MAX);
+    if(lsSet('dualHistory',JSON.stringify(merged))){
+      dualRenderHist(merged);
+      showToast(`✅ 已导入 ${newRecs.length} 条新记录（忽略 ${records.length-newRecs.length} 条重复）`,'ok',3500);
+    }
+  };
+  inp.click();
+}
+function buildFnDetail(){
+  if(_fnDetailBuilt)return;
+  _fnDetailBuilt=true;
+  const dtW=$('detailTableWrapper');
+  if(dtW){
+    const mkPreset=p=>{
+      const k=p.key;
+      const rows=[
+        {l:'预设总暴击',id:`d_${k}_critTotal`},{l:'预设总暴伤%',id:`d_${k}_dmgTotal`,s:'%'},
+        {l:'预设总免暴',id:`d_${k}_dodgeTotal`},{l:'预设总暴减%',id:`d_${k}_reducTotal`,s:'%'},
+        {l:'净暴击(A打预设)',id:`d_${k}_ncAtk`},{l:'实际暴伤(A打预设)%',id:`d_${k}_adAtk`,s:'%'},
+        {l:'净暴击(预设打A)',id:`d_${k}_ncDef`},{l:'实际暴伤(预设打A)%',id:`d_${k}_adDef`,s:'%'}
+      ];
+      const trs=rows.map(r=>`<tr><td>${r.l}</td><td><span id="${r.id}">-</span>${r.s||''}</td></tr>`).join('');
+      return`<div class="preset-detail-card"><div class="preset-detail-title">${p.name}</div><table class="preset-detail-tbl">${trs}</table></div>`;
+    };
+    dtW.innerHTML=`<div style="font-size:.72rem;color:var(--text2);margin-bottom:6px">模型A自身：总暴击 <strong id="dA_sTotalCrit">-</strong> ｜ 总暴伤 <strong id="dA_sTotalDmg">-</strong>% ｜ 总免暴 <strong id="dA_sTotalDodge">-</strong> ｜ 总暴减 <strong id="dA_sTotalReduc">-</strong>%</div>
+      <div class="preset-detail-grid">${PRESET_LIST.map(mkPreset).join('')}</div>`;
+  }
+  const sgW=$('s134ScoreGrid');
+  if(sgW){
+    const scoreRows=[{type:'atk',label:'增伤',score:'out',sl:'输出流'},{type:'def',label:'减伤',score:'def',sl:'减免流'},{type:'total',label:'合计',score:'mix',sl:'混合流'}];
+    const mkSC=m=>{
+      const rgb=m==='A'?'122,138,153':'153,122,138';
+      const items=scoreRows.map(({type,label,score,sl},i)=>`<div style="display:flex;align-items:center;gap:5px${i<2?';margin-bottom:4px':''}"><div class="s134-coeff-card s134-${type}" style="flex:0 0 auto;min-width:76px;margin:0;padding:5px 4px;font-size:.7rem"><div>${m} ${label}</div><span class="s134-num" id="s134_${m}_${type}" style="font-size:.9rem">-</span></div><div style="flex:1;min-width:0"><div class="s134-score-row" style="padding:3px 5px"><span class="s134-score-label" style="min-width:40px;font-size:.68rem">${sl}</span><span class="s134-score-badge s134-score-na" id="s134_${m}_${score}Badge" style="font-size:.66rem">-</span><span class="s134-score-next" id="s134_${m}_${score}Next" style="font-size:.64rem"></span></div><div class="score-bar-wrap"><div class="score-bar-fill" id="s134_${m}_${score}Bar"></div></div></div></div>`).join('');
+      return`<div style="border:1.5px solid rgba(${rgb},.35);border-radius:6px;padding:6px;background:rgba(${rgb},.05)"><div style="font-size:.72rem;font-weight:700;color:var(--col${m});text-align:center;margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid rgba(${rgb},.25)">⚔ 模型 ${m}</div>${items}</div>`;
+    };
+    sgW.innerHTML=mkSC('A');
+  }
+  const sdW=$('s134DetailWrapper');
+  if(sdW){
+    const mkDT=(title,attrs)=>{
+      const trs=attrs.map(({l,a},i)=>{const bd=i<attrs.length-1?'border-bottom:1px solid var(--border);':'';return`<tr style="background:${i%2?'var(--card2)':'var(--card)'}"><td style="padding:3px 5px;${bd}color:var(--text2)">${l}</td><td style="padding:3px 5px;${bd}color:var(--colA);font-weight:700;text-align:center"><span id="${a}">-</span></td></tr>`;}).join('');
+      return`<div style="border:1px solid var(--s134-border);border-radius:5px;overflow:hidden"><div style="background:var(--s134-title);color:#fff;font-size:.7rem;font-weight:700;padding:3px 8px;text-align:center">${title}</div><table style="width:100%;border-collapse:collapse;font-size:.73rem"><thead><tr><th style="background:var(--s134-border);color:var(--text3);padding:3px 5px;font-weight:600">属性</th><th style="background:var(--s134-border);color:var(--cmp-atk);padding:3px 5px;font-weight:600">数值</th></tr></thead><tbody>${trs}</tbody></table></div>`;
+    };
+    const mk=k=>({a:`s134_A_${k}`});
+    sdW.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${mkDT('属性',[{l:'攻击',...mk('rawAtk')},{l:'护甲',...mk('rawArmor')},{l:'帽/一/三加成',...mk('rawBonus3')},{l:'爆炸',...mk('rawExpl3')}])}${mkDT('属性',[{l:'玩家减免',...mk('rawPDef3')},{l:'射速',...mk('rawSpd4')},{l:'【四】加成',...mk('rawBonus4')},{l:'轻型减免',...mk('rawLDef4')}])}</div>`;
+  }
+}
+
+/* §16b 六框预设系数卡片 / 智能优化六选项 / 对比预设选择 —— 均由 PRESET_LIST 动态生成，避免硬编码重复 */
+function buildCoeff6Grid(){
+  const w=$('coeff6GridWrapper');if(!w)return;
+  w.innerHTML=PRESET_LIST.map(p=>`
+    <div class="coeff6-card">
+      <div class="coeff6-title">${p.name}</div>
+      <div class="coeff6-row"><span>模型A攻击系数</span><span class="coeff6-num" id="dCoeff_${p.key}_atk">-</span></div>
+      <div class="coeff6-row"><span>模型A受击系数</span><span class="coeff6-num" id="dCoeff_${p.key}_def">-</span></div>
+    </div>`).join('');
+}
+
+function buildOptTargetSelect(){
+  const sel=$('dUnifiedTarget');if(!sel)return;
+  const shortName=p=>p.name.split('·')[0].trim();
+  const opts=[
+    ...PRESET_LIST.map(p=>`<option value="atk_${p.key}">模型攻击 → ${shortName(p)}</option>`),
+    ...PRESET_LIST.map(p=>`<option value="def_${p.key}">模型防御 ← ${shortName(p)}</option>`)
+  ];
+  sel.innerHTML=opts.join('');
+}
+
+function buildCmpPresetSelect(){
+  const sel=$('dCmpPresetKey');if(!sel)return;
+  const shortName=p=>p.name.split('·')[0].trim();
+  sel.innerHTML=PRESET_LIST.map(p=>`<option value="${p.key}">${shortName(p)}</option>`).join('');
+}
+
+/* §16c 报告图生成（一键分享）
+   基于内嵌的 qrcode-generator（纯前端、离线，无需请求外部图片接口）在 canvas 上绘制一张
+   包含 PartA（暴击区增伤系数）与 PartB（一三四条改造系数）数据的分享图，并附带可跳转的二维码。 */
+const REPORT_QR_URL='https://sps.yy-gp.com/hk994/i.html';
+
+function todayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function cvRoundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+/* 纯前端绘制二维码：逐格读取 qrcode-generator 算出的明暗矩阵直接 fillRect，无需加载图片 */
+function drawQRCode(ctx,text,x,y,size,dark,light){
+  const qr=qrcode(0,'M');
+  qr.addData(text);
+  qr.make();
+  const n=qr.getModuleCount();
+  const cell=size/n;
+  ctx.fillStyle=light||'#ffffff';
+  ctx.fillRect(x,y,size,size);
+  ctx.fillStyle=dark||'#000000';
+  for(let r=0;r<n;r++){
+    for(let c=0;c<n;c++){
+      if(qr.isDark(r,c))ctx.fillRect(x+c*cell,y+r*cell,Math.ceil(cell)+0.6,Math.ceil(cell)+0.6);
+    }
+  }
+}
+
+function buildReportCanvas(customTitle){
+  const css=k=>(getComputedStyle(document.documentElement).getPropertyValue(k)||'').trim();
+  const hexToRgb=h=>{h=(h||'#2563eb').replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16)||0x2563eb;return[(n>>16)&255,(n>>8)&255,n&255];};
+  const colA=css('--colA')||'#2563eb',accent=css('--accent')||'#2563eb',accent2=css('--accent2')||'#1d4ed8';
+  const text=css('--text')||'#0f172a',text2=css('--text2')||'#64748b',text3=css('--text3')||'#334155';
+  const card=css('--card')||'#ffffff',border=css('--border')||'#e2e8f0';
+  const rgbA=hexToRgb(colA).join(',');
+
+  dualCalcNow();
+  const wEl=$('dA_weapon'),weapName=wEl?cleanWeapName(wEl.options[wEl.selectedIndex].text):'-';
+  const wcEl=$('dA_weapCat'),weapCatText=wcEl?wcEl.options[wcEl.selectedIndex].text:'-';
+  const raceType=($('dA_race')?.value||'').split(',')[1]||'human';
+  const raceShort={human:'人类',halfhuman:'半人',mechbone:'械骨人'}[raceType]||'人类';
+  const r134A=calc134ForModel('A');
+  const presetRows=PRESET_LIST.map(p=>({
+    name:p.name,
+    atk:($(`dCoeff_${p.key}_atk`)?.textContent)||'-',
+    def:($(`dCoeff_${p.key}_def`)?.textContent)||'-'
+  }));
+  const levelColor={below:'#ef4444',pass:'#22c55e',good:'#3b82f6',great:'#8b5cf6',max:'#f59e0b',na:'#94a3b8'};
+  const mkRow=(label,sub,rawVal,scoreVal,max,hasData)=>{
+    if(!hasData)return{label,sub,rawVal,text:'未配置',level:'na',scoreVal:0,max:1};
+    const{level,label:lvLabel}=getScoreLevel(scoreVal,max);
+    return{label,sub,rawVal,text:`${lvLabel}（${scoreVal.toFixed(2)}/${max}）`,level,scoreVal,max};
+  };
+  const scoreRows=[
+    mkRow('输出流','增伤',r134A.atkTotal,toScore(r134A.atkTotal),SCORE_MAX.out,r134A.atkTotal>0.0001),
+    mkRow('减免流','减伤',r134A.defTotal,toScore(r134A.defTotal),SCORE_MAX.def,r134A.defTotal>0.0001),
+    mkRow('混合流','合计',r134A.total134,toScore(r134A.atkTotal+r134A.defTotal),getMixedMax('A'),r134A.atkTotal>0.0001&&r134A.defTotal>0.0001)
+  ];
+
+  const hasTitle=!!(customTitle&&customTitle.trim());
+  const W=700,padX=28,contentW=W-padX*2;
+  const headerH=96,titleBannerH=hasTitle?50:0,topGap=24,sectionTitleH=26,presetCardH=98,presetGap=12,gapAfterA=28,scoreRowH=58,gapAfterB=20,footerH=152;
+  const H=headerH+titleBannerH+topGap+sectionTitleH+presetCardH+gapAfterA+sectionTitleH+scoreRowH*3+gapAfterB+footerH;
+
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(DPR,DPR);
+  ctx.textBaseline='alphabetic';
+  const FONT="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif";
+  // 文字过长时自动缩小字号，避免溢出画布
+  const fitFont=(txt,maxW,weight,baseSize,minSize=9)=>{
+    let size=baseSize;
+    ctx.font=`${weight} ${size}px ${FONT}`;
+    while(ctx.measureText(txt).width>maxW&&size>minSize){size-=0.5;ctx.font=`${weight} ${size}px ${FONT}`;}
+    return size;
+  };
+
+  // 背景
+  ctx.fillStyle=card;ctx.fillRect(0,0,W,H);
+
+  // 头部
+  const grad=ctx.createLinearGradient(0,0,W,0);
+  grad.addColorStop(0,colA);grad.addColorStop(1,accent2);
+  ctx.fillStyle=grad;ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle='#fff';ctx.textAlign='center';
+  ctx.font=`800 24px ${FONT}`;
+  ctx.fillText('⚔ 改造数据报告',W/2,44);
+  const subtitle=`种族：${raceShort} ｜ 武器：${weapName} ｜ 增伤公式：${weapCatText}`;
+  fitFont(subtitle,contentW,500,13);
+  ctx.globalAlpha=.92;
+  ctx.fillText(subtitle,W/2,70);
+  ctx.globalAlpha=1;
+
+  let cy=headerH;
+  if(hasTitle){
+    const title=`「${customTitle.trim()}」`;
+    ctx.fillStyle=`rgba(${rgbA},.12)`;ctx.fillRect(0,cy,W,titleBannerH);
+    ctx.strokeStyle=`rgba(${rgbA},.4)`;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,cy+titleBannerH-0.5);ctx.lineTo(W,cy+titleBannerH-0.5);ctx.stroke();
+    ctx.fillStyle=colA;ctx.textAlign='center';
+    fitFont(title,contentW,800,19);
+    ctx.fillText(title,W/2,cy+titleBannerH/2+7);
+    cy+=titleBannerH;
+  }
+  cy+=topGap;
+
+  const drawSectionTitle=txt=>{
+    ctx.fillStyle=accent;ctx.fillRect(padX,cy-13,3,16);
+    ctx.fillStyle=text;ctx.font=`700 15px ${FONT}`;ctx.textAlign='left';
+    ctx.fillText(txt,padX+10,cy);
+    cy+=sectionTitleH;
+  };
+
+  // PartA
+  drawSectionTitle('PartA · 暴击区增伤系数（模型A vs 三种快捷预设）');
+  const presetCardW=(contentW-presetGap*2)/3;
+  presetRows.forEach((p,i)=>{
+    const x=padX+i*(presetCardW+presetGap);
+    ctx.fillStyle=`rgba(${rgbA},.05)`;cvRoundRect(ctx,x,cy,presetCardW,presetCardH,8);ctx.fill();
+    ctx.strokeStyle=`rgba(${rgbA},.25)`;ctx.lineWidth=1.2;cvRoundRect(ctx,x,cy,presetCardW,presetCardH,8);ctx.stroke();
+
+    ctx.fillStyle=colA;ctx.font=`700 13px ${FONT}`;ctx.textAlign='center';
+    ctx.fillText(p.name,x+presetCardW/2,cy+22);
+    ctx.strokeStyle=`rgba(${rgbA},.2)`;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x+10,cy+30);ctx.lineTo(x+presetCardW-10,cy+30);ctx.stroke();
+
+    ctx.font=`500 11px ${FONT}`;ctx.fillStyle=text2;ctx.textAlign='left';
+    ctx.fillText('模型A攻击系数',x+12,cy+52);
+    ctx.font=`800 15px ${FONT}`;ctx.fillStyle=colA;ctx.textAlign='right';
+    ctx.fillText(p.atk,x+presetCardW-12,cy+53);
+
+    ctx.font=`500 11px ${FONT}`;ctx.fillStyle=text2;ctx.textAlign='left';
+    ctx.fillText('模型A受击系数',x+12,cy+78);
+    ctx.font=`800 15px ${FONT}`;ctx.fillStyle=colA;ctx.textAlign='right';
+    ctx.fillText(p.def,x+presetCardW-12,cy+79);
+  });
+  cy+=presetCardH+gapAfterA;
+
+  // PartB
+  drawSectionTitle('PartB · 第一三四条改造系数（模型A）');
+  scoreRows.forEach(r=>{
+    const rowY=cy,col=levelColor[r.level]||levelColor.na;
+    ctx.fillStyle=`rgba(${rgbA},.07)`;cvRoundRect(ctx,padX,rowY,72,scoreRowH-10,6);ctx.fill();
+    ctx.font=`600 10px ${FONT}`;ctx.fillStyle=text2;ctx.textAlign='center';
+    ctx.fillText(`A ${r.sub}`,padX+36,rowY+18);
+    ctx.font=`800 15px ${FONT}`;ctx.fillStyle=colA;
+    ctx.fillText(r.rawVal.toFixed(2),padX+36,rowY+38);
+
+    const bx=padX+82,bw=contentW-82;
+    ctx.font=`600 12px ${FONT}`;ctx.fillStyle=text3;ctx.textAlign='left';
+    ctx.fillText(r.label,bx,rowY+16);
+    ctx.font=`700 11px ${FONT}`;ctx.fillStyle=col;ctx.textAlign='right';
+    ctx.fillText(r.text,bx+bw,rowY+16);
+
+    ctx.fillStyle=border;cvRoundRect(ctx,bx,rowY+24,bw,8,4);ctx.fill();
+    if(r.level!=='na'){
+      const pct=Math.min(1,r.scoreVal/r.max);
+      ctx.fillStyle=col;cvRoundRect(ctx,bx,rowY+24,Math.max(8,bw*pct),8,4);ctx.fill();
+    }
+    cy+=scoreRowH;
+  });
+  cy+=gapAfterB;
+
+  // 分隔线
+  ctx.strokeStyle=border;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(padX,cy);ctx.lineTo(W-padX,cy);ctx.stroke();
+  cy+=18;
+
+  // 二维码 + 说明
+  const qrSize=80;
+  ctx.font=`500 11px ${FONT}`;ctx.fillStyle=text2;ctx.textAlign='center';
+  ctx.fillText('扫码生成同款报告',padX+qrSize/2,cy);
+  // 二维码必须始终保持高对比度；赛博风的正文色为浅色，不能用作二维码深色模块。
+  drawQRCode(ctx,REPORT_QR_URL,padX,cy+10,qrSize,'#0B1020','#FFFFFF');
+  ctx.strokeStyle=border;ctx.lineWidth=1;ctx.strokeRect(padX+0.5,cy+10.5,qrSize-1,qrSize-1);
+
+  ctx.textAlign='left';
+  ctx.font=`600 13px ${FONT}`;ctx.fillStyle=text;
+  ctx.fillText('本报告图由改造优化助手生成',padX+qrSize+18,cy+44);
+  ctx.font=`500 11px ${FONT}`;ctx.fillStyle=text2;
+  ctx.fillText(`生成日期：${todayStr()}`,padX+qrSize+18,cy+64);
+
+  // 外边框
+  ctx.strokeStyle=border;ctx.lineWidth=1;ctx.strokeRect(0.5,0.5,W-1,H-1);
+
+  return canvas;
+}
+
+let reportPreviewUrl='';
+function closeReportPreview(){
+  const ov=$('report-preview-overlay'),img=$('report-preview-image');
+  if(ov)ov.style.display='none';
+  if(img)img.removeAttribute('src');
+  if(reportPreviewUrl){URL.revokeObjectURL(reportPreviewUrl);reportPreviewUrl='';}
+}
+function showReportPreview(url){
+  if(reportPreviewUrl)URL.revokeObjectURL(reportPreviewUrl);
+  reportPreviewUrl=url;
+  const ov=$('report-preview-overlay'),img=$('report-preview-image');
+  if(!ov||!img)return;
+  img.src=url;
+  ov.style.display='flex';
+}
+
+async function generateReportImage(){
+  const btn=$('reportShareBtn');
+  if(btn){btn.disabled=true;btn.style.opacity=.6;}
+  try{
+    const title=await showPrompt('为本次结论图添加标题（可选，例如"我的步枪套"，不需要可直接点确定）：','');
+    if(title===null)return;
+    showToast('正在生成报告图…','info',1500);
+    await new Promise(r=>setTimeout(r,20));
+    const canvas=buildReportCanvas(title);
+    const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
+    if(!blob){showToast('生成失败，请重试','err');return;}
+    const url=URL.createObjectURL(blob);
+    showReportPreview(url);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`改造报告_${todayStr()}.png`;
+    document.body.appendChild(a);a.click();a.remove();
+    showToast('✅ 结论图已弹出，并开始下载','ok');
+  }catch(err){
+    console.error(err);
+    showToast('生成报告图失败：'+(err&&err.message||err),'err',3500);
+  }finally{
+    if(btn){btn.disabled=false;btn.style.opacity=1;}
+  }
+}
+
+/* §16d 皮肤切换 */
+function setSkin(name,btn){
+  if(name==='minimal') document.documentElement.removeAttribute('data-skin');
+  else document.documentElement.setAttribute('data-skin',name);
+  lsSet('skin',name);
+  document.querySelectorAll('.sk-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===name));
+}
+
+/* §17 初始化 */
+window.onload=()=>{
+  const isFirstVisit=!localStorage.getItem('_visited');
+  if(isFirstVisit){localStorage.setItem('_visited','1');lsSet('skin','esport');}
+  const sk=lsGet('skin','esport');
+  if(sk==='minimal'){document.documentElement.removeAttribute('data-skin');}
+  else{document.documentElement.setAttribute('data-skin',sk);}
+  document.querySelectorAll('.sk-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===sk));
+  
+  if(isFirstVisit){
+    setTimeout(()=>{
+      const ov=document.getElementById('welcome-overlay');
+      if(ov){ov.style.display='flex';}
+    },400);
+  }
+
+  // 手机端默认收起一些基础面板节省空间
+  if(window.innerWidth < 768) {
+    ['dA_common','dA_atk'].forEach(id => {
+       const b = $(id);
+       if(b) {
+         b.classList.add('hidden');
+         if(b.previousElementSibling) b.previousElementSibling.classList.add('collapsed');
+         // 同步状态到 localStorage
+         const st=JSON.parse(lsGet('colSt','{}'));
+         st[id]=true;
+         lsSet('colSt',JSON.stringify(st));
+       }
+    });
+  }
+
+  ['A','B'].forEach(m=>{buildPresetPanel(m);buildDualCommonPanel(m);buildDualAtkPanel(m);buildModPanel(`modCard_${m}`,m);updWeaponMastery(m);});
+  buildCoeff6Grid();
+  buildOptTargetSelect();
+  buildCmpPresetSelect();
+  buildFnDetail();
+  
+  const colSt=JSON.parse(lsGet('colSt','{}'));
+  Object.entries(colSt).forEach(([id,hidden])=>{const b=$(id);if(!b)return;const h=b.previousElementSibling;if(hidden){b.classList.add('hidden');if(h)h.classList.add('collapsed');}});
+  
+  dualRenderHist(JSON.parse(lsGet('dualHistory','[]')));
+  dualCalcNow();
+};
+</script>
+</body>
+</html>
