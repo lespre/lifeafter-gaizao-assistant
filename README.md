@@ -21,6 +21,7 @@
 
 1. 下载 `index.html` 直接双击打开（推荐 Chrome / Edge）
 2. 或部署到任意静态托管（如 GitHub Pages）在线使用
+3. 在线预览：https://lespre.github.io/lifeafter-gaizao-assistant/
 
 ## 说明
 
