@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>改造智能助手 · 预设版v1.2</title>
+<title>改造（进阶）助手 · 预设版v1.2</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════
-   shadcn/ui 风格设计系统 — 改造智能助手
+   shadcn/ui 风格设计系统 — 改造（进阶）助手
    ─ 清晰层级 · 精确间距 · 中性色调 · 微动效
    ═══════════════════════════════════════════════ */
 
@@ -812,7 +812,7 @@ select:disabled,input:disabled{opacity:.45;cursor:not-allowed;background:var(--m
 <div class="wrap">
 <header>
   <div class="hd-title-block">
-    <h1>改造智能助手·预设版</h1>
+    <h1>改造（进阶）助手·预设版</h1>
     <div class="subtitle">适用于共创服 · v1.2 ·此版本于26.8.12更新 </div>
     <div class="subtitle" style="opacity:.75;font-size:.65rem;margin-top:2px">💡 支持一键生成改造报告</div>
   </div>
@@ -2545,7 +2545,7 @@ function buildReportCanvas(customTitle){
 
   ctx.textAlign='left';
   ctx.font=`600 13px ${FONT}`;ctx.fillStyle=text;
-  ctx.fillText('本报告图由改造优化助手生成',padX+qrSize+18,cy+44);
+  ctx.fillText('本报告图由改造（进阶）助手生成',padX+qrSize+18,cy+44);
   ctx.font=`500 11px ${FONT}`;ctx.fillStyle=text2;
   ctx.fillText(`生成日期：${todayStr()}`,padX+qrSize+18,cy+64);
 
